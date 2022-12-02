@@ -5,10 +5,33 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<OutputType>Library</OutputType>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/alphons/MongoDB.MvcCore</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/alphons/MongoDB.MvcCore.git</RepositoryUrl>
+		<Description>Serialization Extensions to MvcCore for using MongoDB</Description>
+		<PackageDescription>Serialization Extensions to MvcCore for using MongoDB</PackageDescription>
+		<Version>1.0.0</Version>
+		<PackageId>MongoDB.MvcCore</PackageId>
+		<Authors>alphons</Authors>
+		<AssemblyVersion>7.1.0.0</AssemblyVersion>
+		<FileVersion>7.1.0.0</FileVersion>
+		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+		<PackageTags>MongoDB;MvcCore;Mvc;AspNetCoreMvc;bson;json</PackageTags>
+		<PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MongoDB.Driver" Version="2.18.0" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<None Include="..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>
