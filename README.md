@@ -5,11 +5,11 @@ The MongoDB.MvcCore contains extensions to the MongDB framework where Json strin
 
 The deserializer can also be used as a pretty-print formatter. On console apps the pretty-print feature can ben colorized. However this is no strict Json.
 
-![pretty print colored](https://github.com/alphons/MongoDB.MvcCore/blob/main/blob/PrettyPrintColored.png?raw=true)
+![pretty print colored](https://raw.githubusercontent.com/alphons/MongoDB.MvcCore/main/blob/PrettyPrintColored.png)
 
 The non-colorized Json output is 'valid' Json
 
-![pretty print](https://github.com/alphons/MongoDB.MvcCore/blob/main/blob/PrettyPrint.png?raw=true)
+![pretty print](https://raw.githubusercontent.com/alphons/MongoDB.MvcCore/main/blob/PrettyPrint.png)
 
 The serializer can also be used in an MvcCore project which enables seemless integration of json output from a controller to a client.
 
