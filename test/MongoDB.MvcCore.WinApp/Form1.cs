@@ -34,7 +34,7 @@ namespace MongoTesting.WinApp
 		}
 
 
-		private IMongoCollection<BsonDocument> GetCollection()
+		private IMongoCollection<BsonDocument>? GetCollection()
 		{
 			if (this.client == null)
 				return default;
