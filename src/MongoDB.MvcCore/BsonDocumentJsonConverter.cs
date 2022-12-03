@@ -126,8 +126,10 @@ public class Serializer
 			if (dotNetValue is ObjectId)
 				dotNetValue = $"\u008aObjectId(\"{dotNetValue}\")\u0080";
 
+			//if (dotNetValue is byte[] bindata)
+			//	dotNetValue = "\u008aBinary(Buffer.from(\"" + BitConverter.ToString(bindata).ToLower().Replace("-", string.Empty) + "\", \"hex\"), 0)\u0080";
 			if (dotNetValue is byte[] bindata)
-				dotNetValue = "\u008aBinary(Buffer.from(\"" + BitConverter.ToString(bindata).ToLower().Replace("-", string.Empty) + "\", \"hex\"), 0)\u0080";
+				dotNetValue = "\u008aBinary(\"" + Convert.ToBase64String(bindata) + "\", 0)\u0080";
 
 			if (bsonValue is BsonTimestamp timestamp)
 				dotNetValue = $"\u008aTimestamp({{ t: {timestamp.Timestamp}, i: {timestamp.Increment}}})\u0080";
@@ -157,7 +159,7 @@ public class Serializer
 				dotNetValue = dotNetValue.ToString();
 
 			if (dotNetValue is byte[] bindata)
-				dotNetValue = BitConverter.ToString(bindata).ToLower().Replace("-", string.Empty);
+				dotNetValue = Convert.ToBase64String(bindata);
 
 			if (dotNetValue is BsonTimestamp)
 				dotNetValue = dotNetValue.ToString();

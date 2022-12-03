@@ -14,10 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="MongoDB.MvcCore" Version="1.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
+		<ProjectReference Include="..\..\src\MongoDB.MvcCore\MongoDB.MvcCore.csproj" />
 		<ProjectReference Include="..\InteractiveReadLine\InteractiveReadLine.csproj" />
 	</ItemGroup>
 

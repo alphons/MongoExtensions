@@ -101,7 +101,10 @@ class Program
 
 		var version = $"{Assembly.GetExecutingAssembly().GetName().Version}";
 
+		var serVersion = $"{typeof(Serializer).Assembly.GetName().Version}";
+
 		ColorOutput($"\u0084MongoDB CSharp Shell version:\u0080 {version}{Environment.NewLine}");
+		ColorOutput($"\u0084MongoDB.Serializer version:\u0080 {serVersion}{Environment.NewLine}");
 
 		try
 		{

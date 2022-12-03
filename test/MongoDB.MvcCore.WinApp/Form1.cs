@@ -34,7 +34,7 @@ namespace MongoTesting.WinApp
 		}
 
 
-		private IMongoCollection<BsonDocument>? GetCollection()
+		private IMongoCollection<BsonDocument> GetCollection()
 		{
 			if (this.client == null)
 				return default;
@@ -159,7 +159,7 @@ namespace MongoTesting.WinApp
 				if (string.IsNullOrWhiteSpace(filter))
 					filter = "{}";
 
-				await GetCollection().DeleteOneAsync(filter);
+				var deleteResult = await GetCollection().DeleteOneAsync(filter);
 
 				ShowOutput();
 			}
