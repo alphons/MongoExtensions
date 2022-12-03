@@ -3,9 +3,9 @@ using System.Text.Json;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Bson.Serialization;
+
 using MongoDB.MvcCore.Converters;
-using static MongoDB.MvcCore.BsonJsonSerializer;
+
 
 namespace MongoDB.MvcCore;
 public static class BsonJsonExtensions
@@ -124,22 +124,22 @@ public static class BsonJsonExtensions
 		return db.GetCollection<BsonDocument>(CollectionName, settings);
 	}
 
-	public static string Pretty(this List<BsonDocument> list, TypeSerializationEnum typeSerializationEnum)
+	public static string Pretty(this List<BsonDocument> list,BsonJsonSerializer.TypeSerializationEnum typeSerializationEnum)
 	{
 		return BsonJsonSerializer.ToJson(list, new JsonSerializerOptions() { WriteIndented = true }, typeSerializationEnum);
 	}
 
-	public static string Pretty(this List<BsonValue> list, TypeSerializationEnum typeSerializationEnum)
+	public static string Pretty(this List<BsonValue> list, BsonJsonSerializer.TypeSerializationEnum typeSerializationEnum)
 	{
 		return list.Select(x => x.ToBsonDocument()).ToList().Pretty(typeSerializationEnum);
 	}
 
-	public static string Pretty(this IAsyncCursor<BsonDocument> cursor, TypeSerializationEnum typeSerializationEnum)
+	public static string Pretty(this IAsyncCursor<BsonDocument> cursor, BsonJsonSerializer.TypeSerializationEnum typeSerializationEnum)
 	{
 		return cursor.ToList().Pretty(typeSerializationEnum);
 	}
 
-	public static string Pretty(this IMongoCollection<BsonDocument> collection, TypeSerializationEnum typeSerializationEnum)
+	public static string Pretty(this IMongoCollection<BsonDocument> collection, BsonJsonSerializer.TypeSerializationEnum typeSerializationEnum)
 	{
 		return collection.Find("{}").ToList().Pretty(typeSerializationEnum);
 	}
@@ -167,10 +167,10 @@ public static class BsonJsonExtensions
 		return bsonDocuments.Select(x => x["_id"]).ToList();
 	}
 
-	//public async static Task<DeleteResult> DeleteOneTAsync(this IMongoCollection<BsonDocument> collection, string JsonDocument, CancellationToken cancellationToken = default)
-	//{
-	//	return await collection.DeleteOneAsync(BsonDocument.Parse(JsonDocument), cancellationToken);
-	//}
+	public async static Task<DeleteResult> DeleteOneTAsync(this IMongoCollection<BsonDocument> collection, string JsonDocument, CancellationToken cancellationToken = default)
+	{
+		return await collection.DeleteOneAsync(BsonJsonSerializer.ToBsonDocument(JsonDocument), cancellationToken);
+	}
 
 	public static IAsyncCursor<BsonDocument> Aggregate(this IMongoCollection<BsonDocument> collection, string JsonDocuments, AggregateOptions? options = null)
 	{
