@@ -4,6 +4,8 @@ using System.Text.Json;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
+using MongoDB.MvcCore.Converters;
+using static MongoDB.MvcCore.BsonJsonSerializer;
 
 namespace MongoDB.MvcCore;
 public static class BsonJsonExtensions
@@ -30,36 +32,30 @@ public static class BsonJsonExtensions
 		return await db.RunCommandAsync<BsonDocument>(BsonDocument.Parse(JsonDocument), readPreference, cancellationToken);
 	}
 
-	public async static Task<BsonValue> InsertOneAsync(this IMongoCollection<BsonDocument> collection, string JsonDocument, InsertOneOptions? options = null, CancellationToken cancellationToken = default)
+	public async static Task<BsonValue> InsertOneAsync(this IMongoCollection<BsonDocument> collection, object objA, InsertOneOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var doc = BsonDocument.Parse(JsonDocument);
+		var doc = BsonJsonSerializer.ToBsonDocument(objA);
 		await collection.InsertOneAsync(doc, options, cancellationToken);
 		return doc["_id"];
 	}
 
-	public async static Task<BsonValue> InsertOneAsync(this IMongoCollection<BsonDocument> collection, object objA, InsertOneOptions? options = null, CancellationToken cancellationToken = default)
-	{
-		return await InsertOneAsync(collection, Serializer.Serialize(objA), options, cancellationToken);
-	}
-
 	public async static Task<List<BsonValue>> InsertManyAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, InsertManyOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 		await collection.InsertManyAsync(bsonDocuments, options, cancellationToken);
 		return bsonDocuments.Select(x => x["_id"]).ToList();
 	}
 
 	public async static Task<UpdateResult> UpdateOneAsync(this IMongoCollection<BsonDocument> collection, object objA, CancellationToken cancellationToken = default)
 	{
-		var JsonDocument = Serializer.Serialize(objA);
-		var doc = BsonDocument.Parse(JsonDocument);
+		var doc = BsonJsonSerializer.ToBsonDocument(objA);
 		var id = doc["_id"];
 		return await collection.UpdateOneAsync($"{{ _id : '{id}' }}", doc, new UpdateOptions(), cancellationToken);
 	}
 
 	public async static Task<IAsyncCursor<BsonDocument>> AggregateAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, AggregateOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 		return await collection.AggregateAsync<BsonDocument>(bsonDocuments, options, cancellationToken);
 	}
 
@@ -75,7 +71,7 @@ public static class BsonJsonExtensions
 
 	public async static Task<BulkWriteResult<BsonDocument>> BulkWriteAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, WriteConcern? writeConcern = null, BulkWriteOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 
 		var requests = new List<WriteModel<BsonDocument>>();
 		foreach (var bsonDocument in bsonDocuments)
@@ -115,7 +111,7 @@ public static class BsonJsonExtensions
 
 	public async static Task<IChangeStreamCursor<BsonDocument>> WatchAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, ChangeStreamOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 
 		return await collection.WatchAsync<BsonDocument>(bsonDocuments, options, cancellationToken);
 	}
@@ -128,24 +124,24 @@ public static class BsonJsonExtensions
 		return db.GetCollection<BsonDocument>(CollectionName, settings);
 	}
 
-	public static string Pretty(this List<BsonDocument> list)
+	public static string Pretty(this List<BsonDocument> list, TypeSerializationEnum typeSerializationEnum)
 	{
-		return Serializer.ToJson(list, new JsonSerializerOptions() { WriteIndented = true }, Serializer.TypeSerializationEnum.None);
+		return BsonJsonSerializer.ToJson(list, new JsonSerializerOptions() { WriteIndented = true }, typeSerializationEnum);
 	}
 
-	public static string Pretty(this List<BsonValue> list)
+	public static string Pretty(this List<BsonValue> list, TypeSerializationEnum typeSerializationEnum)
 	{
-		return list.Select(x => x.ToBsonDocument()).ToList().Pretty();
+		return list.Select(x => x.ToBsonDocument()).ToList().Pretty(typeSerializationEnum);
 	}
 
-	public static string Pretty(this IAsyncCursor<BsonDocument> cursor)
+	public static string Pretty(this IAsyncCursor<BsonDocument> cursor, TypeSerializationEnum typeSerializationEnum)
 	{
-		return cursor.ToList().Pretty();
+		return cursor.ToList().Pretty(typeSerializationEnum);
 	}
 
-	public static string Pretty(this IMongoCollection<BsonDocument> collection)
+	public static string Pretty(this IMongoCollection<BsonDocument> collection, TypeSerializationEnum typeSerializationEnum)
 	{
-		return collection.Find("{}").ToList().Pretty();
+		return collection.Find("{}").ToList().Pretty(typeSerializationEnum);
 	}
 
 
@@ -157,21 +153,16 @@ public static class BsonJsonExtensions
 		return db.RunCommand<BsonDocument>(BsonDocument.Parse(JsonDocument), readPreference);
 	}
 
-	public static BsonValue InsertOne(this IMongoCollection<BsonDocument> collection, string JsonDocument, InsertOneOptions? options = null)
-	{
-		var doc = BsonDocument.Parse(JsonDocument);
-		collection.InsertOneAsync(doc, options);
-		return doc["_id"];
-	}
-
 	public static BsonValue InsertOne(this IMongoCollection<BsonDocument> collection, object objA, InsertOneOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		return InsertOne(collection, Serializer.Serialize(objA), options, cancellationToken);
+		var doc = BsonJsonSerializer.ToBsonDocument(objA);
+		collection.InsertOne(doc, options, cancellationToken);
+		return doc["_id"];
 	}
 
 	public static List<BsonValue> InsertMany(this IMongoCollection<BsonDocument> collection, string JsonDocuments, InsertManyOptions? options = null)
 	{
-		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 		collection.InsertManyAsync(bsonDocuments, options);
 		return bsonDocuments.Select(x => x["_id"]).ToList();
 	}
@@ -183,7 +174,7 @@ public static class BsonJsonExtensions
 
 	public static IAsyncCursor<BsonDocument> Aggregate(this IMongoCollection<BsonDocument> collection, string JsonDocuments, AggregateOptions? options = null)
 	{
-		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 		return collection.Aggregate<BsonDocument>(bsonDocuments, options);
 	}
 
@@ -200,7 +191,7 @@ public static class BsonJsonExtensions
 
 	public static BulkWriteResult<BsonDocument> BulkWrite(this IMongoCollection<BsonDocument> collection, string JsonDocuments, WriteConcern? writeConcern = null, BulkWriteOptions? options = null)
 	{
-		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 
 		var requests = new List<WriteModel<BsonDocument>>();
 		foreach (var bsonDocument in bsonDocuments)
@@ -240,7 +231,7 @@ public static class BsonJsonExtensions
 
 	public static IChangeStreamCursor<BsonDocument> Watch(this IMongoCollection<BsonDocument> collection, string JsonDocuments, ChangeStreamOptions? options = null)
 	{
-		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 
 		return collection.Watch<BsonDocument>(bsonDocuments, options);
 	}

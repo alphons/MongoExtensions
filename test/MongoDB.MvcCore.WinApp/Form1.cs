@@ -21,7 +21,7 @@ namespace MongoTesting.WinApp
 			this.txtInput.SelectionTabs = Enumerable.Range(1, 10).Select(x => x * 15).ToArray();
 			this.txtOutput.SelectionTabs = Enumerable.Range(1, 10).Select(x => x * 15).ToArray();
 
-			this.Text += $" (MongoDB.MvcCore: {typeof(Serializer).Assembly.GetName().Version})";
+			this.Text += $" (MongoDB.MvcCore: {typeof(BsonJsonSerializer).Assembly.GetName().Version})";
 		}
 
 		private void TextBox1_KeyDown(object sender, KeyEventArgs e)

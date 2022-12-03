@@ -1,15 +1,15 @@
 ﻿
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+
 using System.Globalization;
 
 using MongoDB.Bson;
-
+using MongoDB.MvcCore.Converters;
 
 namespace MongoDB.MvcCore;
 
-public class Serializer
+public class BsonJsonSerializer
 {
 	public enum TypeSerializationEnum
 	{
@@ -30,7 +30,7 @@ public class Serializer
 			sb.AppendLine();
 		for (int intI = 0; intI < bsonDocuments.Count; intI++)
 		{
-			sb.Append(Serializer.ToJson(1, bsonDocuments[intI], options, typeSerializationEnum));
+			sb.Append(BsonJsonSerializer.ToJson(1, bsonDocuments[intI], options, typeSerializationEnum));
 			if (intI < (bsonDocuments.Count - 1))
 				sb.Append(',');
 			if (WriteIndented)
@@ -83,6 +83,7 @@ public class Serializer
 					sb.Append($"{II}\u0084\"{element.Name}\"\u0080:{S}");
 				else
 					sb.Append($"{II}\"{element.Name}\":{S}");
+
 				if(WriteIndented && (element.Value.IsBsonDocument || element.Value.IsBsonArray))
 					sb.AppendLine();
 
@@ -187,35 +188,16 @@ public class Serializer
 	}
 
 
-	public static string Serialize(object objA)
+	public static BsonDocument ToBsonDocument(object objA)
 	{
-		// TODO: serialize this to a BSON (ISODate etc...)
-		return System.Text.Json.JsonSerializer.Serialize(objA);
+		var serializeOptions = new JsonSerializerOptions { WriteIndented = true };
+
+		serializeOptions.Converters.Add(new DateTimeBsonConverter());
+		serializeOptions.Converters.Add(new BinaryDataBsonConverter());
+		serializeOptions.Converters.Add(new GuidBsonConverter());
+
+		var json = JsonSerializer.Serialize(objA, serializeOptions);
+		return BsonDocument.Parse(json);
 	}
 }
 
-public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
-{
-	public override BsonDocument? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		throw new NotImplementedException();
-	}
-
-	public override void Write(Utf8JsonWriter writer, BsonDocument bsonDocument, JsonSerializerOptions options)
-	{
-		writer.WriteRawValue(Serializer.ToJson(0, bsonDocument, options, Serializer.TypeSerializationEnum.None));
-	}
-}
-
-public class BsonDocumentsJsonConverter : JsonConverter<List<BsonDocument>>
-{
-	public override List<BsonDocument>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		throw new NotImplementedException();
-	}
-
-	public override void Write(Utf8JsonWriter writer, List<BsonDocument> bsonDocuments, JsonSerializerOptions? options)
-	{
-		writer.WriteRawValue(Serializer.ToJson(bsonDocuments, options, Serializer.TypeSerializationEnum.None));
-	}
-}

@@ -10,7 +10,6 @@ using MongoDB.Driver;
 using InteractiveReadLine.KeyBehaviors;
 using InteractiveReadLine;
 using InteractiveReadLine.Tokenizing;
-using static MongoDB.MvcCore.Serializer;
 
 namespace MongoDB.MvcCore.ConsoleApp;
 
@@ -32,7 +31,7 @@ class Program
 
 	private static string CurrentConnection = string.Empty;
 
-	private static Serializer.TypeSerializationEnum typeSerializationEnum = Serializer.TypeSerializationEnum.Colorize;
+	private static BsonJsonSerializer.TypeSerializationEnum typeSerializationEnum = BsonJsonSerializer.TypeSerializationEnum.Colorize;
 
 	private static readonly string[] autoCompleteWords = {
 "ls",
@@ -102,15 +101,16 @@ class Program
 
 		public static async Task Main(String[] args)
 		{
-			var demo = new Demo() { Datum = DateTime.Now };
-			var a = Serializer.Serialize(demo);
+			//var demo = new Demo() { Datum = DateTime.Now };
+			//var a = BsonSerializer.Serialize(demo);
+			//var b = BsonDocument.Parse(a);
 
 
 			var prompt = MakePrompt();
 
 			var version = $"{Assembly.GetExecutingAssembly().GetName().Version}";
 
-			var serVersion = $"{typeof(Serializer).Assembly.GetName().Version}";
+			var serVersion = $"{typeof(BsonJsonSerializer).Assembly.GetName().Version}";
 
 			ColorOutput($"\u0084MongoDB CSharp Shell version:\u0080 {version}{Environment.NewLine}");
 			ColorOutput($"\u0084MongoDB.Serializer version:\u0080 {serVersion}{Environment.NewLine}");
@@ -178,7 +178,7 @@ class Program
 						ColorException(eee.Message);
 					}
 					if (result != null)
-						ColorOutput(result.Pretty());
+						ColorOutput(result.Pretty(typeSerializationEnum));
 					result = null;
 					sb = new StringBuilder();
 
@@ -282,7 +282,7 @@ class Program
 
 		private static void Color(BsonValue val)
 		{
-			ColorOutput(Serializer.ToJson(0, val, new JsonSerializerOptions() { WriteIndented = true }, typeSerializationEnum) + Environment.NewLine);
+			ColorOutput(BsonJsonSerializer.ToJson(0, val, new JsonSerializerOptions() { WriteIndented = true }, typeSerializationEnum) + Environment.NewLine);
 		}
 
 		private static async Task ExecParsedAsync(FunctionArguments parsed)
@@ -297,9 +297,9 @@ class Program
 					if (string.IsNullOrWhiteSpace(args))
 						ColorUsage($"{parsed.Name} [on|off]");
 					if (args == "on" || args == "1" || args == "true" || args == "yes")
-						typeSerializationEnum = TypeSerializationEnum.Colorize;
+						typeSerializationEnum = BsonJsonSerializer.TypeSerializationEnum.Colorize;
 					else
-						typeSerializationEnum = TypeSerializationEnum.None;
+						typeSerializationEnum = BsonJsonSerializer.TypeSerializationEnum.None;
 					break;
 				case "cls":
 					Console.Clear();

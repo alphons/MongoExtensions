@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 
 var services = builder.Services;
 
-var mongoclient = new MongoClient(builder.Configuration.GetSection("Mongo")["ConnectionString1"]);
+var mongoclient = new MongoClient(builder.Configuration.GetSection("Mongo")["ConnectionString2"]);
 
 services.AddSingleton<IMongoClient>(mongoclient);
 
