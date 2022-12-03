@@ -7,7 +7,9 @@ The deserializer can also be used as a pretty-print formatter. On console apps t
 
 ![pretty print colored](https://github.com/alphons/MongoDB.MvcCore/blob/main/blob/PrettyPrintColored.png?raw=true)
 
-```
+The serializer can also be used in an MvcCore project which enables seemless integration of json output from a controller to a client.
+
+```c#
 using MongoDB.Driver;
 using MongoDB.MvcCore;
 
@@ -22,7 +24,7 @@ services
     .AddBsonJsonConverters(); // Serialization in API controller
 ```
 
-```
+```c#
 public class MongoController : ControllerBase
 {
 	private readonly IMongoClient mongo;
