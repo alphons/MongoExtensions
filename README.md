@@ -3,9 +3,13 @@ Serialization Extensions to MvcCore for using MongoDB
 
 The MongoDB.MvcCore contains extensions to the MongDB framework where Json strings can be used as input and output can be deserialized to Json.
 
-The deserializer can also be used as a pretty-print formatter. On console apps the pretty-print feature can ben colorized.
+The deserializer can also be used as a pretty-print formatter. On console apps the pretty-print feature can ben colorized. However this is no strict Json.
 
 ![pretty print colored](https://github.com/alphons/MongoDB.MvcCore/blob/main/blob/PrettyPrintColored.png?raw=true)
+
+The non-colorized Json output is 'valid' Json
+
+![pretty print](https://github.com/alphons/MongoDB.MvcCore/blob/main/blob/PrettyPrint.png?raw=true)
 
 The serializer can also be used in an MvcCore project which enables seemless integration of json output from a controller to a client.
 
