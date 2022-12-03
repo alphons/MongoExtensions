@@ -53,6 +53,11 @@ public static class BsonJsonExtensions
 		return await collection.UpdateOneAsync($"{{ _id : '{id}' }}", doc, new UpdateOptions(), cancellationToken);
 	}
 
+	public async static Task<DeleteResult> DeleteOneAsync(this IMongoCollection<BsonDocument> collection, object objA, CancellationToken cancellationToken = default)
+	{
+		return await collection.DeleteOneAsync(BsonJsonSerializer.ToBsonDocument(objA), cancellationToken);
+	}
+
 	public async static Task<IAsyncCursor<BsonDocument>> AggregateAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, AggregateOptions? options = null, CancellationToken cancellationToken = default)
 	{
 		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
@@ -163,13 +168,8 @@ public static class BsonJsonExtensions
 	public static List<BsonValue> InsertMany(this IMongoCollection<BsonDocument> collection, string JsonDocuments, InsertManyOptions? options = null)
 	{
 		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
-		collection.InsertManyAsync(bsonDocuments, options);
+		collection.InsertMany(bsonDocuments, options);
 		return bsonDocuments.Select(x => x["_id"]).ToList();
-	}
-
-	public async static Task<DeleteResult> DeleteOneTAsync(this IMongoCollection<BsonDocument> collection, string JsonDocument, CancellationToken cancellationToken = default)
-	{
-		return await collection.DeleteOneAsync(BsonJsonSerializer.ToBsonDocument(JsonDocument), cancellationToken);
 	}
 
 	public static IAsyncCursor<BsonDocument> Aggregate(this IMongoCollection<BsonDocument> collection, string JsonDocuments, AggregateOptions? options = null)
