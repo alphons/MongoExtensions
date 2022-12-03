@@ -12,7 +12,7 @@ using InteractiveReadLine.KeyBehaviors;
 using InteractiveReadLine;
 using InteractiveReadLine.Tokenizing;
 
-namespace MongoTesting.ConsoleApp;
+namespace MongoDB.MvcCore.ConsoleApp;
 
 class Program
 {
