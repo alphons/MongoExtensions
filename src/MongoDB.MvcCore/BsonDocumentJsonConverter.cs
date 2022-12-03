@@ -6,18 +6,22 @@ using System.Globalization;
 
 using MongoDB.Bson;
 
+
 namespace MongoDB.MvcCore;
 
 public class Serializer
 {
-	/// <summary>
-	/// Give color chars on console output
-	/// </summary>
-	public static bool Colorize { get; set; }
+	public enum TypeSerializationEnum
+	{
+		None,
+		Colorize,
+		Json,
+		Bson
+	}
 
 	private const string SPACES = "                                                                                ";
 
-	public static string ToJson(List<BsonDocument> bsonDocuments, JsonSerializerOptions? options)
+	public static string ToJson(List<BsonDocument> bsonDocuments, JsonSerializerOptions? options, TypeSerializationEnum typeSerializationEnum)
 	{
 		var WriteIndented = options != null && options.WriteIndented;
 		var sb = new StringBuilder();
@@ -26,7 +30,7 @@ public class Serializer
 			sb.AppendLine();
 		for (int intI = 0; intI < bsonDocuments.Count; intI++)
 		{
-			sb.Append(Serializer.ToJson(1, bsonDocuments[intI], options));
+			sb.Append(Serializer.ToJson(1, bsonDocuments[intI], options, typeSerializationEnum));
 			if (intI < (bsonDocuments.Count - 1))
 				sb.Append(',');
 			if (WriteIndented)
@@ -58,7 +62,7 @@ public class Serializer
 
 	// Names and values MUST be encoded using doublequote chars
 
-	public static string ToJson(int Depth, BsonValue bsonValue, JsonSerializerOptions? options)
+	public static string ToJson(int Depth, BsonValue bsonValue, JsonSerializerOptions? options, TypeSerializationEnum typeSerializationEnum)
 	{
 		var WriteIndented = options != null && options.WriteIndented;
 		var I = WriteIndented ? Indent(Depth) : string.Empty;	// Indent
@@ -75,14 +79,14 @@ public class Serializer
 			{
 				BsonElement element = bsonDocument.Elements.ElementAt(intI);
 
-				if(Serializer.Colorize)
+				if(typeSerializationEnum == TypeSerializationEnum.Colorize)
 					sb.Append($"{II}\u0084\"{element.Name}\"\u0080:{S}");
 				else
 					sb.Append($"{II}\"{element.Name}\":{S}");
 				if(WriteIndented && (element.Value.IsBsonDocument || element.Value.IsBsonArray))
 					sb.AppendLine();
 
-				sb.Append($"{ToJson(Depth + 1, element.Value, options)}");
+				sb.Append($"{ToJson(Depth + 1, element.Value, options, typeSerializationEnum)}");
 
 				if (intI < (bsonDocument.ElementCount - 1))
 					sb.Append(',');
@@ -101,7 +105,7 @@ public class Serializer
 				var val = bsonValue.AsBsonArray[intJ];
 				if (WriteIndented && !val.IsBsonDocument && !val.IsBsonArray)
 					sb.Append(II);
-				sb.Append($"{ToJson(Depth + 1, val, options)}");
+				sb.Append($"{ToJson(Depth + 1, val, options, typeSerializationEnum)}");
 				if (intJ < (bsonValue.AsBsonArray.Count - 1))
 					sb.Append(',');
 				sb.Append(N);
@@ -112,7 +116,7 @@ public class Serializer
 
 		var dotNetValue = BsonTypeMapper.MapToDotNetValue(bsonValue);
 
-		if (Serializer.Colorize)
+		if (typeSerializationEnum == TypeSerializationEnum.Colorize)
 		{
 			if (dotNetValue is BsonRegularExpression)
 				dotNetValue = dotNetValue.ToString();
@@ -181,6 +185,13 @@ public class Serializer
 
 		return sb.ToString();
 	}
+
+
+	public static string Serialize(object objA)
+	{
+		// TODO: serialize this to a BSON (ISODate etc...)
+		return System.Text.Json.JsonSerializer.Serialize(objA);
+	}
 }
 
 public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
@@ -192,7 +203,7 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
 
 	public override void Write(Utf8JsonWriter writer, BsonDocument bsonDocument, JsonSerializerOptions options)
 	{
-		writer.WriteRawValue(Serializer.ToJson(0, bsonDocument, options));
+		writer.WriteRawValue(Serializer.ToJson(0, bsonDocument, options, Serializer.TypeSerializationEnum.None));
 	}
 }
 
@@ -205,6 +216,6 @@ public class BsonDocumentsJsonConverter : JsonConverter<List<BsonDocument>>
 
 	public override void Write(Utf8JsonWriter writer, List<BsonDocument> bsonDocuments, JsonSerializerOptions? options)
 	{
-		writer.WriteRawValue(Serializer.ToJson(bsonDocuments, options));
+		writer.WriteRawValue(Serializer.ToJson(bsonDocuments, options, Serializer.TypeSerializationEnum.None));
 	}
 }
