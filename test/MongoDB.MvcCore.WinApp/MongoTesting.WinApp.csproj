@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>mongodb.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="OldStuff.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="mongodb.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="OldStuff.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.MvcCore" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

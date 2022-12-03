@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>7.0.0.0-alpha</Version>
+		<ApplicationIcon>mongodb.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="mongodb.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="MongoDB.MvcCore" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\InteractiveReadLine\InteractiveReadLine.csproj" />
+	</ItemGroup>
+
+</Project>

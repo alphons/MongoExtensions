@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>MongoDB - test</title>
+
+	<link href="./Css/Ui.css" rel="stylesheet" />
+	<link href="./Css/Default.css" rel="stylesheet" />
+	<script src="./Scripts/macros.js" defer></script>
+	<script src="./Scripts/netproxy.js" defer></script>
+	<script src="Default.js" defer></script>
+</head>
+<body>
+
+	<h3>MongoDB - test</h3>
+
+	<div id="MongoClientSettings" class="ui-btn">MongoDB Client Settings</div>
+
+	<div id="ShowDatabases" class="ui-btn">Show Databases</div>
+
+	<div id="Test0" class="ui-btn">Test 0</div>
+
+	<div id="Test1" class="ui-btn">Test 1</div>
+
+	<div id="Test3" class="ui-btn">Test 3</div>
+
+	<div id="Test4" class="ui-btn">Test 4</div>
+
+	<div id="Test5" class="ui-btn">Test 5</div>
+
+	<div id="Test6" class="ui-btn">Test 6</div>
+
+	<script type="text/template" id="TemplateList">
+		<table class="TableNormal">
+			<tr>
+				<th>Index</th>
+				<th>{{=this.Name}}</th>
+			</tr>
+			{{ this.List.forEach(function (item,index) { }}
+			<tr><td>{{=index}}</td><td>{{=item}}</td></tr>
+			{{ }); }}
+		</table>
+	</script>
+
+	<script type="text/template" id="TemplateCollumnList">
+		<table class="TableNormal">
+			{{ this.forEach(function (data,index) { }}
+			<tr>
+				{{ if(index == 0) { }}
+				{{ Object.getOwnPropertyNames(data).forEach(function (propname) { }}
+				<th>{{=propname}}</th>
+				{{ }); }}
+			</tr>
+			<tr>
+				{{ } }}
+				{{ Object.getOwnPropertyNames(data).forEach(function (propname) { }}
+				<td>{{=data[propname]}}</td>
+				{{ }); }}
+			</tr>
+			{{ }); }}
+		</table>
+	</script>
+
+	<script type="text/template" id="TemplateObjectProperties">
+		<table>
+			<tbody>
+				{{ var data = this; }}
+				{{ Object.getOwnPropertyNames(data).forEach(function (propname) { }}
+				<tr>
+					<td>{{=propname}}</td>
+					<td>{{=data[propname]}}</td>
+				</tr>
+				{{ }); }}
+			</tbody>
+		</table>
+	</script>
+
+	<table class="ShowTable">
+		<tr>
+			<td id="DataBases"></td>
+			<td id="Collections"></td>
+		</tr>
+	</table>
+
+	<div>
+		<span class="ui-btn" id="Vorige">Vorige</span>
+		<span class="ui-btn" id="PageNr"></span>
+		<span class="ui-btn" id="Volgende">Volgende</span>
+	</div>
+	<div id="Output"></div>
+
+</body>
+</html>

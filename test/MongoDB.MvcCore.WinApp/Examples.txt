@@ -1,0 +1,244 @@
+﻿$match
+$project
+$group
+$merge
+$sort
+
+--
+
+[
+   { $match: { quantity: 20 } },
+   { $project: { _id: 0, amount: 0 } },
+   { $merge : { into : "newCollection3" } }
+]
+
+
+[
+   {
+      $match:
+      {
+         'date': { $gte: new ISODate( '2020-01-30' ), $lt: new ISODate( '2022-01-30' ) }
+      }
+   },
+   {
+      $group:
+      {
+         _id: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+         totalOrderValue: { $sum: { $multiply: [ '$price', '$quantity' ] } },
+         averageOrderQuantity: { $avg: '$quantity' }
+      }
+   },
+   {
+     $project: { _id:0 }
+   },
+   {
+      $sort: { totalOrderValue: -1 }
+   },
+   { 
+      $merge : { into : "result1" } 
+   }
+]
+
+===========
+
+[{
+        $match: {
+            infected_per_100k: {
+                $lt: 1000
+            }
+        }
+    }, {
+        $lookup: {
+            from: "gemeenten",
+            localField: "gmcode",
+            foreignField: "gemcode",
+            as: "gemeente"
+        }
+    }, {
+        $project: {
+            _id: 0,
+            date_unix: 0,
+            gmcode: 0,
+            date_of_insertion_unix: 0,
+            gemeente: {
+                _id: 0,
+                vrCode: 0,
+                gemcode: 0
+            }
+        }
+    }, {
+        $sort: {
+            infected_per_100k: 1
+        }
+    }
+]
+
+=============
+[
+  {
+   $lookup:
+    {
+      from: "corona",
+      localField: "gemcode",
+      foreignField: "gmcode",
+      as: "corona"
+    }
+  },
+  {
+    $project:
+    {
+       _id : 0, vrCode:0, gemcode:0,
+	   cccc: "$corona.infected"
+      corona:
+      {
+        _id : 0, date_unix:0, gmcode:0, date_of_insertion_unix:0      
+	  }
+    }
+  },
+  {
+    $sort:
+    {
+       "corona.infected": 1
+    }
+  }
+]
+
+==============
+
+gemeenten
+[
+	{
+		"_id": "621b8de80f55b62f30b118bb",
+		"name": "Aa en Hunze",
+		"vrCode": "VR03",
+		"gemcode": "GM1680"
+	},
+	{
+		"_id": "621b8de80f55b62f30b118bc",
+		"name": "Aalsmeer",
+		"vrCode": "VR13",
+		"gemcode": "GM0358"
+	},
+	....
+]
+
+corona
+[
+	{
+		"_id": "621b8b70e82fd20baf55255c",
+		"date_unix": 1645833600,
+		"gmcode": "GM0014",
+		"infected_per_100k": 373,
+		"infected": 870,
+		"date_of_insertion_unix": 1645881053
+	},
+	{
+		"_id": "621b8b70e82fd20baf55255d",
+		"date_unix": 1645833600,
+		"gmcode": "GM0034",
+		"infected_per_100k": 101.5,
+		"infected": 218,
+		"date_of_insertion_unix": 1645881053
+	},
+    .....
+]
+
+
+-------------------
+db.gemeenten.aggregate(
+[
+	{
+        $lookup: 
+		{
+            from: "corona",
+            localField: "gemcode",
+            foreignField: "gmcode",
+            as: "corona"
+        }
+    }, 
+	{
+        $project: 
+		{
+            _id: 0,
+            Name: "$name",
+            "infected": 
+			{
+                $arrayElemAt: ["$corona.infected", 0]
+            },
+            "infected_per_100k": 
+			{
+                $arrayElemAt: ["$corona.infected_per_100k", 0]
+            }
+        }
+    }, 
+	 
+])
+
+===========
+db.corona.aggregate(
+[
+  {
+   $lookup:
+    {
+      from: 'gemeenten',
+      localField: 'gmcode',
+      foreignField: 'gemcode',
+      as: 'corona_gemeenten'
+    }
+  },
+  {
+	$unwind: '$corona_gemeenten'
+  },
+  {
+    $project:
+    {
+	_id:0,
+	Name: '$corona_gemeenten.name',
+	infected_per_100k:1
+	infected: 1,
+    }
+  },
+  {
+    $sort:
+    {
+      infected_per_100k:-1
+    }
+  }
+])
+
+
+{
+  name: "ShowCorona",
+  DbName: "test",
+  ColName: "corona",
+  query:
+"[
+  {
+   $lookup:
+    {
+      from: 'gemeenten',
+      localField: 'gmcode',
+      foreignField: 'gemcode',
+      as: 'corona_gemeenten'
+    }
+  },
+  {
+	$unwind: '$corona_gemeenten'
+  },
+  {
+    $project:
+    {
+	_id:0,
+	Name: '$corona_gemeenten.name',
+	infected_per_100k:1
+	infected: 1,
+    }
+  },
+  {
+    $sort:
+    {
+      infected_per_100k:-1
+    }
+  }
+]"
+}
