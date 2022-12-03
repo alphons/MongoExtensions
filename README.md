@@ -1,8 +1,11 @@
 # MongoDB.MvcCore
-Serialization Extensions to MvcCore for using MongoDB 
+Serialization Extensions to MvcCore for using MongoDB
 
-![pretty print colored](https://github.com/alphons/[MongoDB.MvcCore/tree]/blob/PrettyPrintColored.png?raw=true)
+The MongoDB.MvcCore contains extensions to the MongDB framework where Json strings can be used as input and output can be deserialized to Json.
 
+The deserializer can also be used as a pretty-print formatter. On console apps the pretty-print feature can ben colorized.
+
+![pretty print colored](https://github.com/alphons/MongoDB.MvcCore/blob/main/blob/PrettyPrintColored.png?raw=true)
 
 ```
 using MongoDB.Driver;
