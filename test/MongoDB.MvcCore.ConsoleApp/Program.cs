@@ -6,7 +6,6 @@ using System.Reflection;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.MvcCore;
 
 using InteractiveReadLine.KeyBehaviors;
 using InteractiveReadLine;
@@ -19,14 +18,12 @@ class Program
 	private static readonly string DEFAULTPORT = "27017";
 	private static readonly string CONNECTIONADDRESS = "127.0.0.1";
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	private static MongoClient client;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 	private static string DbName = string.Empty;
 	private static string ColName = string.Empty;
 
-	private static List<BsonDocument>? result = null;
+	private static List<BsonDocument> result = null;
 
 	private static StringBuilder sb = new();
 
