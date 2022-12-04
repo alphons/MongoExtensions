@@ -113,7 +113,7 @@ class Program
 			var serVersion = $"{typeof(BsonJsonSerializer).Assembly.GetName().Version}";
 
 			ColorOutput($"\u0084MongoDB CSharp Shell version:\u0080 {version}{Environment.NewLine}");
-			ColorOutput($"\u0084MongoDB.Serializer version:\u0080 {serVersion}{Environment.NewLine}");
+			ColorOutput($"\u0084MongoDB.MvcCore.BsonJsonSerializer version:\u0080 {serVersion}{Environment.NewLine}");
 
 			try
 			{
