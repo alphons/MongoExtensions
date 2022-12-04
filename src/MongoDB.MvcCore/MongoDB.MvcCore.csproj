@@ -12,11 +12,11 @@
 		<RepositoryUrl>https://github.com/alphons/MongoDB.MvcCore.git</RepositoryUrl>
 		<Description>Serialization Extensions to MvcCore for using MongoDB</Description>
 		<PackageDescription>Serialization Extensions to MvcCore for using MongoDB</PackageDescription>
-		<Version>1.0.6</Version>
+		<Version>1.0.7</Version>
 		<PackageId>MongoDB.MvcCore</PackageId>
 		<Authors>alphons</Authors>
-		<AssemblyVersion>7.1.0.6</AssemblyVersion>
-		<FileVersion>7.1.0.6</FileVersion>
+		<AssemblyVersion>7.1.0.7</AssemblyVersion>
+		<FileVersion>7.1.0.7</FileVersion>
 		<IsPackable>true</IsPackable>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 		<PackageTags>MongoDB;MvcCore;Mvc;AspNetCoreMvc;bson;json</PackageTags>
