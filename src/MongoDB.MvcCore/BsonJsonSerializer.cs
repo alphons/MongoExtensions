@@ -14,10 +14,12 @@ public class BsonJsonSerializer
 	public enum TypeSerializationEnum
 	{
 		None,
-		Colorize,
-		Json,
-		Bson
+		Colorize
 	}
+	private static readonly JsonSerializerOptions DefaultSerializerOptions = new()
+	{
+		Converters = { new DateTimeBsonConverter(), new BinaryDataBsonConverter(), new GuidBsonConverter() }
+	};
 
 	private const string SPACES = "                                                                                ";
 
@@ -190,14 +192,7 @@ public class BsonJsonSerializer
 
 	public static BsonDocument ToBsonDocument(object objA)
 	{
-		var serializeOptions = new JsonSerializerOptions { WriteIndented = true };
-
-		serializeOptions.Converters.Add(new DateTimeBsonConverter());
-		serializeOptions.Converters.Add(new BinaryDataBsonConverter());
-		serializeOptions.Converters.Add(new GuidBsonConverter());
-
-		var json = JsonSerializer.Serialize(objA, serializeOptions);
-		return BsonDocument.Parse(json);
+		return BsonDocument.Parse(JsonSerializer.Serialize(objA, DefaultSerializerOptions));
 	}
 }
 

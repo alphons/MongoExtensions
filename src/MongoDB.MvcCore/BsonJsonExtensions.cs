@@ -32,6 +32,13 @@ public static class BsonJsonExtensions
 		return await db.RunCommandAsync<BsonDocument>(BsonDocument.Parse(JsonDocument), readPreference, cancellationToken);
 	}
 
+	public async static Task<BsonValue> InsertOneAsync(this IMongoCollection<BsonDocument> collection, string Json, InsertOneOptions? options = null, CancellationToken cancellationToken = default)
+	{
+		var doc = BsonDocument.Parse(Json);
+		await collection.InsertOneAsync(doc, options, cancellationToken);
+		return doc["_id"];
+	}
+
 	public async static Task<BsonValue> InsertOneAsync(this IMongoCollection<BsonDocument> collection, object objA, InsertOneOptions? options = null, CancellationToken cancellationToken = default)
 	{
 		var doc = BsonJsonSerializer.ToBsonDocument(objA);
@@ -51,6 +58,11 @@ public static class BsonJsonExtensions
 		var doc = BsonJsonSerializer.ToBsonDocument(objA);
 		var id = doc["_id"];
 		return await collection.UpdateOneAsync($"{{ _id : '{id}' }}", doc, new UpdateOptions(), cancellationToken);
+	}
+
+	public async static Task<DeleteResult> DeleteOneAsync(this IMongoCollection<BsonDocument> collection, string Json, CancellationToken cancellationToken = default)
+	{
+		return await collection.DeleteOneAsync(BsonDocument.Parse(Json), cancellationToken);
 	}
 
 	public async static Task<DeleteResult> DeleteOneAsync(this IMongoCollection<BsonDocument> collection, object objA, CancellationToken cancellationToken = default)

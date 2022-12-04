@@ -50,12 +50,12 @@ namespace MongoTesting.WinApp
 
 		private void ShowOutput()
 		{
-			this.txtOutput.Text = GetCollection().Pretty();
+			this.txtOutput.Text = GetCollection().Pretty(BsonJsonSerializer.TypeSerializationEnum.None);
 		}
 
 		private void ShowOutput(List<BsonDocument> list)
 		{
-			this.txtOutput.Text = list.Pretty();
+			this.txtOutput.Text = list.Pretty(BsonJsonSerializer.TypeSerializationEnum.None);
 		}
 
 		private string GetInput()
