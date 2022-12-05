@@ -53,16 +53,42 @@ public static class BsonJsonExtensions
 		return bsonDocuments.Select(x => x["_id"]).ToList();
 	}
 
-	public async static Task<UpdateResult> UpdateOneAsync(this IMongoCollection<BsonDocument> collection, object objA, CancellationToken cancellationToken = default)
+	public async static Task<ReplaceOneResult> ReplaceOneByIdAsync(this IMongoCollection<BsonDocument> collection, object objA, CancellationToken cancellationToken = default)
 	{
 		var doc = BsonJsonSerializer.ToBsonDocument(objA);
 		var id = doc["_id"];
-		return await collection.UpdateOneAsync($"{{ _id : '{id}' }}", doc, new UpdateOptions(), cancellationToken);
+		string filter;
+		if (id.IsGuid)
+			filter = $"{{ _id : UUID('{id.AsGuid}') }}";
+		else if (id.IsObjectId)
+			filter = $"{{ _id : ObjectId('{id.AsObjectId}') }}";
+		else if (id.IsString)
+			filter = $"{{ _id : '{id.AsString}' }}";
+		else
+			filter = $"{{ _id : {id.AsInt64} }}"; // some kind of int
+		return await collection.ReplaceOneAsync(filter, doc, new ReplaceOptions() { IsUpsert = true }, cancellationToken);
 	}
 
 	public async static Task<DeleteResult> DeleteOneAsync(this IMongoCollection<BsonDocument> collection, string Json, CancellationToken cancellationToken = default)
 	{
 		return await collection.DeleteOneAsync(BsonDocument.Parse(Json), cancellationToken);
+	}
+
+	public async static Task<DeleteResult> DeleteOneByIdAsync(this IMongoCollection<BsonDocument> collection, object objA, CancellationToken cancellationToken = default)
+	{
+		var doc = BsonJsonSerializer.ToBsonDocument(objA);
+		var id = doc["_id"];
+		string filter;
+		if (id.IsGuid)
+			filter = $"{{ _id : UUID('{id.AsGuid}') }}";
+		else if (id.IsObjectId)
+			filter = $"{{ _id : ObjectId('{id.AsObjectId}') }}";
+		else if (id.IsString)
+			filter = $"{{ _id : '{id.AsString}' }}";
+		else
+			filter = $"{{ _id : {id.AsInt64} }}"; // some kind of int
+
+		return await collection.DeleteOneAsync(filter, cancellationToken);
 	}
 
 	public async static Task<DeleteResult> DeleteOneAsync(this IMongoCollection<BsonDocument> collection, object objA, CancellationToken cancellationToken = default)
