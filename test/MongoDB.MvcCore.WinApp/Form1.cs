@@ -18,8 +18,8 @@ namespace MongoTesting.WinApp
 			InitializeComponent();
 
 			// pixels
-			this.txtInput.SelectionTabs = Enumerable.Range(1, 20).Select(x => x * 10).ToArray();
-			this.txtOutput.SelectionTabs = Enumerable.Range(1, 20).Select(x => x * 10).ToArray();
+			this.txtInput.SelectionTabs = Enumerable.Range(1, 30).Select(x => x * 15).ToArray();
+			this.txtOutput.SelectionTabs = Enumerable.Range(1, 30).Select(x => x * 15).ToArray();
 
 			this.Text += $" (MongoDB.MvcCore.BsonJsonSerializer: {typeof(BsonJsonSerializer).Assembly.GetName().Version})";
 		}
