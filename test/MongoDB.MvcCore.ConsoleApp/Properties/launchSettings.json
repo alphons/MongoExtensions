@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MongoDB.MvcCore.ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "192.168.28.123"
+    }
+  }
+}

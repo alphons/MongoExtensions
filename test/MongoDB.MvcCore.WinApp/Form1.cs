@@ -34,7 +34,7 @@ namespace MongoTesting.WinApp
 		}
 
 
-		private IMongoCollection<BsonDocument> GetCollection()
+		private IMongoCollection<BsonDocument>? GetCollection()
 		{
 			if (this.client == null)
 				return default;
@@ -50,7 +50,7 @@ namespace MongoTesting.WinApp
 
 		private void ShowOutput()
 		{
-			this.txtOutput.Text = GetCollection().Pretty(BsonJsonSerializer.TypeSerializationEnum.None);
+			this.txtOutput.Text = GetCollection()?.Pretty(BsonJsonSerializer.TypeSerializationEnum.None);
 		}
 
 		private void ShowOutput(List<BsonDocument> list)
@@ -92,11 +92,15 @@ namespace MongoTesting.WinApp
 
 				if (!string.IsNullOrWhiteSpace(json))
 				{
+					var collection = GetCollection();
 
-					if (json.StartsWith('['))
-						await GetCollection().InsertManyAsync(json);
-					else
-						await GetCollection().InsertOneAsync(json);
+					if (collection != null)
+					{
+						if (json.StartsWith('['))
+							await collection.InsertManyAsync(json);
+						else
+							await collection.InsertOneAsync(json);
+					}
 				}
 
 				ShowOutput();
@@ -118,9 +122,13 @@ namespace MongoTesting.WinApp
 				if (string.IsNullOrWhiteSpace(Find))
 					Find = "{}";
 
-				var list = await GetCollection().Find(Find).ToListAsync();
+				var collection = GetCollection();
+				if (collection != null)
+				{
+					var list = await collection.Find(Find).ToListAsync();
 
-				ShowOutput(list);
+					ShowOutput(list);
+				}
 			}
 			catch (Exception eee)
 			{
@@ -140,9 +148,14 @@ namespace MongoTesting.WinApp
 			{
 				var json = GetInput();
 
-				var list = await GetCollection().AggregateAsync(json);
+				var collection = GetCollection();
 
-				ShowOutput(await list.ToListAsync());
+				if (collection != null)
+				{
+					var list = await collection.AggregateAsync(json);
+
+					ShowOutput(await list.ToListAsync());
+				}
 			}
 			catch(Exception eee)
 			{
@@ -159,9 +172,14 @@ namespace MongoTesting.WinApp
 				if (string.IsNullOrWhiteSpace(filter))
 					filter = "{}";
 
-				var deleteResult = await GetCollection().DeleteOneAsync(filter);
+				var collection = GetCollection();
 
-				ShowOutput();
+				if (collection != null)
+				{
+					var deleteResult = await collection.DeleteOneAsync(filter);
+
+					ShowOutput();
+				}
 			}
 			catch (Exception eee)
 			{
@@ -179,9 +197,14 @@ namespace MongoTesting.WinApp
 			{
 				Project = GetInput();
 
-				var list = await GetCollection().Find(Find).Project(Project).ToListAsync();
+				var collection = GetCollection();
 
-				ShowOutput(list);
+				if (collection != null)
+				{
+					var list = await collection.Find(Find).Project(Project).ToListAsync();
+
+					ShowOutput(list);
+				}
 			}
 			catch (Exception eee)
 			{
@@ -195,9 +218,15 @@ namespace MongoTesting.WinApp
 			{
 				Sort = GetInput();
 
-				var list = await GetCollection().Find(Find).Project(Project).Sort(Sort).ToListAsync();
 
-				ShowOutput(list);
+				var collection = GetCollection();
+
+				if (collection != null)
+				{
+					var list = await collection.Find(Find).Project(Project).Sort(Sort).ToListAsync();
+
+					ShowOutput(list);
+				}
 			}
 			catch (Exception eee)
 			{
@@ -214,9 +243,14 @@ namespace MongoTesting.WinApp
 				if (string.IsNullOrWhiteSpace(filter))
 					filter = "{}";
 
-				var count = await GetCollection().CountDocumentsAsync(filter);
+				var collection = GetCollection();
 
-				this.txtOutput.Text = $"total:{count}";
+				if (collection != null)
+				{
+					var count = await collection.CountDocumentsAsync(filter);
+
+					this.txtOutput.Text = $"total:{count}";
+				}
 			}
 			catch (Exception eee)
 			{
@@ -233,7 +267,12 @@ namespace MongoTesting.WinApp
 				if (string.IsNullOrWhiteSpace(filter))
 					filter = "{}";
 
-				await GetCollection().DeleteManyAsync(filter);
+				var collection = GetCollection();
+
+				if (collection != null)
+				{
+					await collection.DeleteManyAsync(filter);
+				}
 
 				ShowOutput();
 			}
@@ -243,20 +282,20 @@ namespace MongoTesting.WinApp
 			}
 		}
 
-		async private void button10_Click(object sender, EventArgs e)
+		async private void Button10_Click(object sender, EventArgs e)
 		{
 			this.client = new (this.txtConnectionString.Text);
 
 			var names = await this.client.ListDatabaseNames().ToListAsync();
 
 			this.cmbDBName.Items.Clear();
-			this.cmbDBName.Items.AddRange(names.ToArray());
+			this.cmbDBName.Items.AddRange([.. names]);
 
 			this.groupBox1.Enabled = true;
 			this.groupBox2.Enabled = true;
 		}
 
-		async private void cmbDBName_SelectedIndexChanged(object sender, EventArgs e)
+		async private void CmbDBName_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (this.client == null)
 				return;
@@ -270,7 +309,7 @@ namespace MongoTesting.WinApp
 
 			this.cmbCollectionName.Items.Clear();
 
-			this.cmbCollectionName.Items.AddRange(names.ToArray());
+			this.cmbCollectionName.Items.AddRange([.. names]);
 
 		}
 
@@ -278,8 +317,8 @@ namespace MongoTesting.WinApp
 		{
 			var s = this.txtInput.Text;
 
-			s = new Regex("skip:[^}]*").Replace(s, $"skip: {Skip} ");
-			s = new Regex("limit:[^}]*").Replace(s, $"limit: {Take} ");
+			s = MyRegex().Replace(s, $"skip: {Skip} ");
+			s = MyRegex1().Replace(s, $"limit: {Take} ");
 
 			this.txtInput.Text = s;
 
@@ -288,7 +327,7 @@ namespace MongoTesting.WinApp
 
 		private long MaxRecords;
 
-		async private void cmbCollectionName_SelectedIndexChanged(object sender, EventArgs e)
+		async private void CmbCollectionName_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			this.txtInput.Text = @"[
 { $match: {} },
@@ -299,16 +338,20 @@ namespace MongoTesting.WinApp
 			this.txtPageLength.Text = "1";
 			await PageAsync(0, 1);
 
-			var count = await GetCollection().EstimatedDocumentCountAsync();
-			MaxRecords = count;
-			this.lblTotal.Text = $"total: {count}";
+			var collection = GetCollection();
 
+			if (collection != null)
+			{
+				var count = await collection.EstimatedDocumentCountAsync();
+				MaxRecords = count;
+				this.lblTotal.Text = $"total: {count}";
+			}
 		}
 
-		private async void btnPrev_Click(object sender, EventArgs e)
+		private async void BtnPrev_Click(object sender, EventArgs e)
 		{
-			long.TryParse(this.txtPage.Text, out long lngPageIndex);
-			long.TryParse(this.txtPageLength.Text, out long lngPageLength);
+			_ = long.TryParse(this.txtPage.Text, out long lngPageIndex);
+			_ = long.TryParse(this.txtPageLength.Text, out long lngPageLength);
 			lngPageIndex -= lngPageLength;
 			if (lngPageIndex < 0)
 				lngPageIndex = 0;
@@ -318,10 +361,10 @@ namespace MongoTesting.WinApp
 			await PageAsync(lngPageIndex, lngPageLength);
 		}
 
-		private async void btnNxt_Click(object sender, EventArgs e)
+		private async void BtnNxt_Click(object sender, EventArgs e)
 		{
-			long.TryParse(this.txtPage.Text, out long lngPageIndex);
-			long.TryParse(this.txtPageLength.Text, out long lngPageLength);
+			_ = long.TryParse(this.txtPage.Text, out long lngPageIndex);
+			_ = long.TryParse(this.txtPageLength.Text, out long lngPageLength);
 			lngPageIndex += lngPageLength;
 			if (lngPageIndex >= MaxRecords)
 				lngPageIndex = MaxRecords-1;
@@ -331,14 +374,14 @@ namespace MongoTesting.WinApp
 			await PageAsync(lngPageIndex, lngPageLength);
 		}
 
-		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.Close();
 		}
 
-		private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-		{
-
-		}
+		[GeneratedRegex("skip:[^}]*")]
+		private static partial Regex MyRegex();
+		[GeneratedRegex("limit:[^}]*")]
+		private static partial Regex MyRegex1();
 	}
 }

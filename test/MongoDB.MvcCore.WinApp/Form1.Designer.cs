@@ -228,7 +228,7 @@
 			this.button10.TabIndex = 19;
 			this.button10.Text = "Connect";
 			this.button10.UseVisualStyleBackColor = true;
-			this.button10.Click += new System.EventHandler(this.button10_Click);
+			this.button10.Click += new System.EventHandler(this.Button10_Click);
 			// 
 			// cmbDBName
 			// 
@@ -238,7 +238,7 @@
 			this.cmbDBName.Name = "cmbDBName";
 			this.cmbDBName.Size = new System.Drawing.Size(114, 23);
 			this.cmbDBName.TabIndex = 20;
-			this.cmbDBName.SelectedIndexChanged += new System.EventHandler(this.cmbDBName_SelectedIndexChanged);
+			this.cmbDBName.SelectedIndexChanged += new System.EventHandler(this.CmbDBName_SelectedIndexChanged);
 			// 
 			// cmbCollectionName
 			// 
@@ -248,7 +248,7 @@
 			this.cmbCollectionName.Name = "cmbCollectionName";
 			this.cmbCollectionName.Size = new System.Drawing.Size(247, 23);
 			this.cmbCollectionName.TabIndex = 21;
-			this.cmbCollectionName.SelectedIndexChanged += new System.EventHandler(this.cmbCollectionName_SelectedIndexChanged);
+			this.cmbCollectionName.SelectedIndexChanged += new System.EventHandler(this.CmbCollectionName_SelectedIndexChanged);
 			// 
 			// groupBox1
 			// 
@@ -302,7 +302,7 @@
 			this.btnPrev.TabIndex = 25;
 			this.btnPrev.Text = "<";
 			this.btnPrev.UseVisualStyleBackColor = true;
-			this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+			this.btnPrev.Click += new System.EventHandler(this.BtnPrev_Click);
 			// 
 			// btnNxt
 			// 
@@ -312,7 +312,7 @@
 			this.btnNxt.TabIndex = 26;
 			this.btnNxt.Text = ">";
 			this.btnNxt.UseVisualStyleBackColor = true;
-			this.btnNxt.Click += new System.EventHandler(this.btnNxt_Click);
+			this.btnNxt.Click += new System.EventHandler(this.BtnNxt_Click);
 			// 
 			// txtPage
 			// 
@@ -361,7 +361,7 @@
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.Size = new System.Drawing.Size(93, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
-			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
 			// splitContainer1
 			// 
@@ -392,7 +392,6 @@
 			this.splitContainer1.SplitterDistance = 550;
 			this.splitContainer1.SplitterWidth = 20;
 			this.splitContainer1.TabIndex = 31;
-			this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
 			// 
 			// Form1
 			// 
