@@ -1,7 +1,7 @@
-# MongoDB.MvcCore
-Serialization Extensions to MvcCore for using MongoDB
+# MongoExtensions
+Serialization Extensions to MvcCore for using Mongo
 
-The MongoDB.MvcCore contains extensions to the MongDB framework where Json strings can be used as input and output can be deserialized to Json.
+The MongoExtensions contains extensions to the Mong framework where Json strings can be used as input and output can be deserialized to Json.
 
 The deserializer can also be used as a pretty-print formatter. On console apps the pretty-print feature can ben colorized. However this is no strict Json.
 
@@ -15,7 +15,7 @@ The serializer can also be used in an MvcCore project which enables seemless int
 
 ```c#
 using MongoDB.Driver;
-using MongoDB.MvcCore;
+using MongoDBExtensions;
 
 var services = builder.Services;
 
