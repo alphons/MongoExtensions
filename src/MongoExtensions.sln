@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArgumentsParser", "Argument
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteractiveReadLine", "InteractiveReadLine\InteractiveReadLine.csproj", "{33F7ADFD-1ED4-46F2-B2A0-17DA883FB02F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoExtensions.ConsoleApp", "MongoExtensions.ConsoleApp\MongoExtensions.ConsoleApp.csproj", "{E0864D4C-2F2A-4A1B-AAE1-02322F9C4CFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mongo.MongoCli", "MongoExtensions.ConsoleApp\Mongo.MongoCli.csproj", "{E0864D4C-2F2A-4A1B-AAE1-02322F9C4CFF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoExtensions.CoreWeb", "MongoExtensions.CoreWeb\MongoExtensions.CoreWeb.csproj", "{4D96BE7E-3C73-4348-BB4E-6DAEAB0713D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mongo.CoreWeb", "MongoExtensions.CoreWeb\Mongo.CoreWeb.csproj", "{4D96BE7E-3C73-4348-BB4E-6DAEAB0713D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoExtensions.WinApp", "MongoExtensions.WinApp\MongoExtensions.WinApp.csproj", "{5F48F122-637F-4471-8D56-E58ACEADFF22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mongo.WinApp", "MongoExtensions.WinApp\Mongo.WinApp.csproj", "{5F48F122-637F-4471-8D56-E58ACEADFF22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
