@@ -1,13 +1,15 @@
 ﻿
 using System.Text.Json;
 
+
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Bson.Serialization;
 
-using MongoDB.MvcCore.Converters;
+using MongoExtensions.Converters;
 
 
-namespace MongoDB.MvcCore;
+namespace MongoExtensions;
 public static class BsonJsonExtensions
 {
 	/// <summary>
@@ -48,7 +50,7 @@ public static class BsonJsonExtensions
 
 	public async static Task<List<BsonValue>> InsertManyAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, InsertManyOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 		await collection.InsertManyAsync(bsonDocuments, options, cancellationToken);
 		return bsonDocuments.Select(x => x["_id"]).ToList();
 	}
@@ -98,7 +100,7 @@ public static class BsonJsonExtensions
 
 	public async static Task<IAsyncCursor<BsonDocument>> AggregateAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, AggregateOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 		return await collection.AggregateAsync<BsonDocument>(bsonDocuments, options, cancellationToken);
 	}
 
@@ -114,7 +116,7 @@ public static class BsonJsonExtensions
 
 	public async static Task<BulkWriteResult<BsonDocument>> BulkWriteAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, WriteConcern? writeConcern = null, BulkWriteOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 
 		var requests = new List<WriteModel<BsonDocument>>();
 		foreach (var bsonDocument in bsonDocuments)
@@ -154,7 +156,7 @@ public static class BsonJsonExtensions
 
 	public async static Task<IChangeStreamCursor<BsonDocument>> WatchAsync(this IMongoCollection<BsonDocument> collection, string JsonDocuments, ChangeStreamOptions? options = null, CancellationToken cancellationToken = default)
 	{
-		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 
 		return await collection.WatchAsync<BsonDocument>(bsonDocuments, options, cancellationToken);
 	}
@@ -205,14 +207,14 @@ public static class BsonJsonExtensions
 
 	public static List<BsonValue> InsertMany(this IMongoCollection<BsonDocument> collection, string JsonDocuments, InsertManyOptions? options = null)
 	{
-		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 		collection.InsertMany(bsonDocuments, options);
 		return bsonDocuments.Select(x => x["_id"]).ToList();
 	}
 
 	public static IAsyncCursor<BsonDocument> Aggregate(this IMongoCollection<BsonDocument> collection, string JsonDocuments, AggregateOptions? options = null)
 	{
-		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 		return collection.Aggregate<BsonDocument>(bsonDocuments, options);
 	}
 
@@ -229,7 +231,7 @@ public static class BsonJsonExtensions
 
 	public static BulkWriteResult<BsonDocument> BulkWrite(this IMongoCollection<BsonDocument> collection, string JsonDocuments, WriteConcern? writeConcern = null, BulkWriteOptions? options = null)
 	{
-		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 
 		var requests = new List<WriteModel<BsonDocument>>();
 		foreach (var bsonDocument in bsonDocuments)
@@ -269,7 +271,7 @@ public static class BsonJsonExtensions
 
 	public static IChangeStreamCursor<BsonDocument> Watch(this IMongoCollection<BsonDocument> collection, string JsonDocuments, ChangeStreamOptions? options = null)
 	{
-		var bsonDocuments = Bson.Serialization.BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
+		var bsonDocuments = BsonSerializer.Deserialize<BsonDocument[]>(JsonDocuments);
 
 		return collection.Watch<BsonDocument>(bsonDocuments, options);
 	}

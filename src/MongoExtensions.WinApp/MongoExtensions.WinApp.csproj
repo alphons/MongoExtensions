@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MongoDB.MvcCore\MongoDB.MvcCore.csproj" />
+    <ProjectReference Include="..\MongoExtensions\MongoExtensions.csproj" />
   </ItemGroup>
 
 </Project>

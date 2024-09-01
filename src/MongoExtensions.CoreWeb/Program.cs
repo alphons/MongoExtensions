@@ -1,6 +1,6 @@
 
 using MongoDB.Driver;
-using MongoDB.MvcCore;
+using MongoExtensions;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {

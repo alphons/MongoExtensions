@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Extensions;
+using MongoExtensions;
 
 
 namespace MongoTesting.ConsoleApp

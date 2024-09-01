@@ -8,12 +8,12 @@
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://github.com/alphons/MongoDB.MvcCore</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/alphons/MongoDB.MvcCore.git</RepositoryUrl>
-		<Description>Serialization Extensions to MvcCore for using MongoDB</Description>
-		<PackageDescription>Serialization Extensions to MvcCore for using MongoDB</PackageDescription>
+		<PackageProjectUrl>https://github.com/alphons/MongoExtensions</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/alphons/MongoExtensions.git</RepositoryUrl>
+		<Description>Serialization Extensions to MvcCore for using Mongo</Description>
+		<PackageDescription>Serialization Extensions to MvcCore for using Mongo</PackageDescription>
 		<Version>1.0.9</Version>
-		<PackageId>MongoDB.MvcCore</PackageId>
+		<PackageId>MongoExtensions</PackageId>
 		<Authors>alphons</Authors>
 		<AssemblyVersion>8.1.0.9</AssemblyVersion>
 		<FileVersion>8.1.0.9</FileVersion>

@@ -11,7 +11,7 @@ using InteractiveReadLine.KeyBehaviors;
 using InteractiveReadLine;
 using InteractiveReadLine.Tokenizing;
 
-namespace MongoDB.MvcCore.ConsoleApp;
+namespace MongoExtensions.ConsoleApp;
 
 class Program
 {

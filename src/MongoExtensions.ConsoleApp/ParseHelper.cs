@@ -1,7 +1,7 @@
 ﻿
 using System.Text;
 
-namespace MongoDB.MvcCore.ConsoleApp;
+namespace MongoExtensions.ConsoleApp;
 
 public class FunctionArguments
 {
