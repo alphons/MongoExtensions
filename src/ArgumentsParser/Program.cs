@@ -1,6 +1,5 @@
 ﻿
 
-using MonoCli;
 
 //Helper.Parse(" f ( { a:'b', c:\"d\", e: [ aa: 'bb' , i : 123 ] }, {  a:'b', c:\"d\", e: [ aa: 'bb' , i : 123 ]} )");
 
@@ -9,6 +8,8 @@ using MonoCli;
 //var af1 = Helper.ParseFunction(" f ( { }, {}, {  }, {}       )");
 
 //var af2 = Helper.ParseFunction("f(a )");
+
+using MongoCli;
 
 string s;
 
