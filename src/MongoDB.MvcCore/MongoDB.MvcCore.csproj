@@ -15,8 +15,8 @@
 		<Version>1.0.9</Version>
 		<PackageId>MongoDB.MvcCore</PackageId>
 		<Authors>alphons</Authors>
-		<AssemblyVersion>7.1.0.9</AssemblyVersion>
-		<FileVersion>7.1.0.9</FileVersion>
+		<AssemblyVersion>8.1.0.9</AssemblyVersion>
+		<FileVersion>8.1.0.9</FileVersion>
 		<IsPackable>true</IsPackable>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 		<PackageTags>MongoDB;MvcCore;Mvc;AspNetCoreMvc;bson;json</PackageTags>
