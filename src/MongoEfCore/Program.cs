@@ -3,6 +3,7 @@ using BsonExtensions;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 
+using MongoDB.Bson;
 
 using MongoEfCore;
 using System.Diagnostics;
@@ -21,19 +22,19 @@ if (1 == 1)
 
 	var movies = dbClient?.GetDatabase("testdb1").GetCollection<Movie>("movies");
 
-	var aaa1 = movies.FirstOrDefault(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+	var aaa1 = movies.FirstOrDefault(x => x._id == ObjectId.Parse("66d48adca720951e07550d78"));
 
-	var aaa2 = await movies.Where(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78")).FirstOrDefaultAsync();
+	var aaa2 = await movies.Where(x => x._id ==ObjectId.Parse("66d48adca720951e07550d78")).FirstOrDefaultAsync();
 
-	var aaa3 = await movies.FirsOrDefaultAsync(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+	var aaa3 = await movies.FirsOrDefaultAsync(x => x._id == ObjectId.Parse("66d48adca720951e07550d78"));
 
 	for (int i = 0; i < 1000; i++)
 	{
-		await movies.FirsOrDefaultAsync(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+		await movies.FirsOrDefaultAsync(x => x._id == ObjectId.Parse("66d48adca720951e07550d78"));
 	}
 
 
-	var movie1 = await movies.FirsOrDefaultAsync(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+	var movie1 = await movies.FirsOrDefaultAsync(x => x._id == ObjectId.Parse("66d48adca720951e07550d78"));
 
 
 	Console.WriteLine($"{sw1.ElapsedMilliseconds}mS {movie1.Title}");
@@ -54,9 +55,9 @@ var db = MyDbContext.Create(client.GetDatabase("testdb1"));
 
 for (int i = 0; i < 1000; i++)
 {
-	await db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+	await db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m._id == ObjectId.Parse("66d48adca720951e07550d78"));
 }
-var movie2 = await db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+var movie2 = await db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m._id == bjectId.Parse("66d48adca720951e07550d78"));
 
 Console.WriteLine($"{sw2.ElapsedMilliseconds}mS {movie2.Title}");
 
