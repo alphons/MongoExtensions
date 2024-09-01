@@ -70,42 +70,43 @@ function PageEvents()
 
 }
 
-function MongoClientSettings()
+async function MongoClientSettings()
 {
-	netproxy("./api/MongoClientSettings", {}, function ()
-	{
-		Output.Template(Template, this.Settings, false);
-	});
+	var result = await netproxyasync("./api/MongoClientSettings");
+
+	Output.Template(Template, result, false);
 }
 
-function ShowDatabases()
+async function ShowDatabases()
 {
+	Output.innerHTML = "";
 	Collections.innerHTML = "";
-	netproxy("./api/ShowDatabases", {}, function ()
-	{
-		DataBases.Template(TemplateList, { Name: "Databases", List: this.List }, false);
-	});
+	var result = await netproxyasync("./api/ShowDatabases");
+
+	DataBases.Template(TemplateList, { Name: "Databases", List: result.List }, false);
 }
 
-function ShowCollections()
+async function ShowCollections()
 {
-	netproxy("./api/ShowCollections", { DbName: DbName}, function ()
-	{
-		Collections.Template(TemplateList, { Name: DbName + " collections", List: this.List }, false);
-	});
+	Output.innerHTML = "";
+
+	var result = await netproxyasync("./api/ShowCollections", { DbName: DbName });
+
+	Collections.Template(TemplateList, { Name: DbName + " collections", List: result.List }, false);
 }
 
-function ShowCollection()
+async function ShowCollection()
 {
-	netproxy("./api/ShowCollection", { DbName: DbName, ColName: ColName }, function ()
-	{
-		//Output.Template(TemplateCollumnList, this.List, false);
-		Output.innerHTML = RenderJSON(this);
-	});
+	Output.innerHTML = "";
+	var result = await netproxyasync("./api/ShowCollection", { DbName: DbName, ColName: ColName });
+
+	//Output.Template(TemplateCollumnList, this.List, false);
+	Output.innerHTML = RenderJSON(result);
 }
 
 function Doit(name)
 {
+	Output.innerHTML = "";
 	netproxy("./api/" + name, {}, function ()
 	{
 		Output.Template(TemplateCollumnList, this.List, false);

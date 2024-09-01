@@ -7,28 +7,26 @@ using MongoDB.MvcCore;
 
 namespace MongoTesting.CoreWeb.LogicControllers
 {
-	public class MongoController : ControllerBase
+	public class MongoController(IMongoClient mongo) : ControllerBase
 	{
-		private readonly IMongoClient mongo;
-		public MongoController(IMongoClient mongoClient)
-		{
-			this.mongo = mongoClient;
-		}
 
-		[HttpPost]
-		[Route("~/api/MongoClientSettings")]
+		[HttpGet("~/api/MongoClientSettings")]
 		public async Task<IActionResult> MongoClientSettings()
 		{
 			await Task.Yield();
 
+			var settings = mongo.Settings;
+
 			return Ok(new
 			{
-				mongo.Settings
+				settings.HeartbeatInterval,
+				settings.HeartbeatTimeout,
+				settings.ConnectTimeout,
+				Host = settings.Server.Host +":" + settings.Server.Port
 			});
 		}
 
-		[HttpPost]
-		[Route("~/api/ShowDatabases")]
+		[HttpGet("~/api/ShowDatabases")]
 		public async Task<IActionResult> ShowDatabases()
 		{
 			var List = await mongo.ListDatabaseNames().ToListAsync();
@@ -39,8 +37,7 @@ namespace MongoTesting.CoreWeb.LogicControllers
 			});
 		}
 
-		[HttpPost]
-		[Route("~/api/ShowCollections")]
+		[HttpPost("~/api/ShowCollections")]
 		public async Task<IActionResult> ShowCollections(string DbName)
 		{
 			var List = await mongo.GetDatabase(DbName).ListCollectionNames().ToListAsync();
@@ -51,8 +48,7 @@ namespace MongoTesting.CoreWeb.LogicControllers
 			});
 		}
 
-		[HttpPost]
-		[Route("~/api/ShowCollection")]
+		[HttpPost("~/api/ShowCollection")]
 		public async Task<IActionResult> ShowCollection(string DbName, string ColName)
 		{
 			var List = await mongo.GetDatabase(DbName).GetCollection(ColName).Find("{}").ToListAsync();
@@ -63,8 +59,7 @@ namespace MongoTesting.CoreWeb.LogicControllers
 			});
 		}
 
-		[HttpPost]
-		[Route("~/api/Test0")]
+		[HttpPost("~/api/Test0")]
 		public async Task<IActionResult> Test0()
 		{
 			var List = await mongo.GetDatabase("acme").GetCollection("Alphons").Find("{}").ToListAsync();
@@ -79,8 +74,8 @@ namespace MongoTesting.CoreWeb.LogicControllers
 
 		}
 
-		[HttpPost]
-		[Route("~/api/Test1")]
+
+		[HttpPost("~/api/Test1")]
 		public async Task<IActionResult> Test1()
 		{
 			var accounts = mongo.GetDatabase("test1").GetCollection("accounts");
@@ -137,8 +132,8 @@ namespace MongoTesting.CoreWeb.LogicControllers
 		}
 
 
-		[HttpPost]
-		[Route("~/api/Test3")]
+
+		[HttpPost("~/api/Test3")]
 		public async Task<IActionResult> Test3()
 		{
 			var armbanden = mongo.GetDatabase("Ibizanet").GetCollection("armbanden2");
@@ -177,8 +172,8 @@ namespace MongoTesting.CoreWeb.LogicControllers
 
 		}
 
-		[HttpPost]
-		[Route("~/api/Test4")]
+
+		[HttpPost("~/api/Test4")]
 		public async Task<IActionResult> Test4()
 		{
 			var col = mongo.GetDatabase("sample_training").GetCollection("grades");
@@ -193,8 +188,8 @@ namespace MongoTesting.CoreWeb.LogicControllers
 		}
 
 
-		[HttpPost]
-		[Route("~/api/Test5")]
+
+		[HttpPost("~/api/Test5")]
 		public async Task<IActionResult> Test5()
 		{
 			var List = await mongo.GetDatabase("acme").GetCollection("posts").Find("{}").ToListAsync();
@@ -207,8 +202,8 @@ namespace MongoTesting.CoreWeb.LogicControllers
 			});
 		}
 
-		[HttpPost]
-		[Route("~/api/Test6")]
+
+		[HttpPost("~/api/Test6")]
 		public async Task<IActionResult> Test6(int Page, string ColName, int SortDir)
 		{
 			var PageLength = 10;

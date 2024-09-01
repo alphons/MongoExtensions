@@ -8,7 +8,7 @@
 	  <PackageReference Include="netproxy" Version="2.1.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\MongoDB.MvcCore\MongoDB.MvcCore.csproj" />
+	  <ProjectReference Include="..\MongoDB.MvcCore\MongoDB.MvcCore.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

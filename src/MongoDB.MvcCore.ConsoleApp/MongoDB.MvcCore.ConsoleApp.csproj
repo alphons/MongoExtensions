@@ -5,7 +5,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<Version>7.0.0.0-alpha</Version>
+		<Version>8.0.0.1</Version>
 		<ApplicationIcon>mongodb.ico</ApplicationIcon>
 	</PropertyGroup>
 
@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\MongoDB.MvcCore\MongoDB.MvcCore.csproj" />
+		<ProjectReference Include="..\MongoDB.MvcCore\MongoDB.MvcCore.csproj" />
 		<ProjectReference Include="..\InteractiveReadLine\InteractiveReadLine.csproj" />
 	</ItemGroup>
 
