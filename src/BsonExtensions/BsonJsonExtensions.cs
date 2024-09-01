@@ -6,10 +6,10 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 
-using MongoExtensions.Converters;
+using BsonExtensions.Converters;
 
 
-namespace MongoExtensions;
+namespace BsonExtensions;
 public static class BsonJsonExtensions
 {
 	/// <summary>

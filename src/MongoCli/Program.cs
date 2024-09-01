@@ -11,7 +11,9 @@ using InteractiveReadLine.KeyBehaviors;
 using InteractiveReadLine;
 using InteractiveReadLine.Tokenizing;
 
-namespace MongoExtensions.ConsoleApp;
+using BsonExtensions;
+
+namespace MongoCli;
 
 class Program
 {
@@ -33,7 +35,7 @@ class Program
 
 	private static BsonJsonSerializer.TypeSerializationEnum typeSerializationEnum = BsonJsonSerializer.TypeSerializationEnum.Colorize;
 
-	private static readonly string[] autoCompleteWords = {
+	private static readonly string[] autoCompleteWords = [
 "ls",
 "rename",
 "import",
@@ -63,10 +65,10 @@ class Program
 "command",
 "connect",
 "createindex",
-"countdocuments" };
+"countdocuments" ];
 
 
-	private static List<string> history = new();
+	private static readonly List<string> history = [];
 
 	private static string[] AutoComplete(TokenizedLine line)
 	{

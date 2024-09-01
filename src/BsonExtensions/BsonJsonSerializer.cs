@@ -5,9 +5,9 @@ using System.Text.Json;
 using System.Globalization;
 
 using MongoDB.Bson;
-using MongoExtensions.Converters;
+using BsonExtensions.Converters;
 
-namespace MongoExtensions;
+namespace BsonExtensions;
 
 public class BsonJsonSerializer
 {

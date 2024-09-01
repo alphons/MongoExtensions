@@ -1,6 +1,6 @@
 ﻿
 
-using MongoTesting.ConsoleApp;
+using MonoCli;
 
 //Helper.Parse(" f ( { a:'b', c:\"d\", e: [ aa: 'bb' , i : 123 ] }, {  a:'b', c:\"d\", e: [ aa: 'bb' , i : 123 ]} )");
 
@@ -10,11 +10,11 @@ using MongoTesting.ConsoleApp;
 
 //var af2 = Helper.ParseFunction("f(a )");
 
-var s = string.Empty;
+string s;
 
 s = " ls -al";
-s = " f( a";
-s = " insert { _id: 'abc' }";
+//s = " f( a";
+//s = " insert { _id: 'abc' }";
 
 var af = ParseHelper.ParseFunction(s);
 Console.WriteLine($"[{s}] Complete:{af.Complete} Function:{af.IsFunction} Name:{af.Name}");

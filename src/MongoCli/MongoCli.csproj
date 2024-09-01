@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\MongoExtensions\MongoExtensions.csproj" />
+		<ProjectReference Include="..\BsonExtensions\BsonExtensions.csproj" />
 		<ProjectReference Include="..\InteractiveReadLine\InteractiveReadLine.csproj" />
 	</ItemGroup>
 

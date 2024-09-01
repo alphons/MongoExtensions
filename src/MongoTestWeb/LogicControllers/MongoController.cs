@@ -2,10 +2,10 @@
 
 // nuget MongoDB.Driver
 using MongoDB.Driver;
-using MongoExtensions;
+using BsonExtensions;
 
 
-namespace MongoTesting.CoreWeb.LogicControllers
+namespace MongoTestWeb.LogicControllers
 {
 	public class MongoController(IMongoClient mongo) : ControllerBase
 	{

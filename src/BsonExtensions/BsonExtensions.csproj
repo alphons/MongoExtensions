@@ -13,7 +13,7 @@
 		<Description>Serialization Extensions to MvcCore for using Mongo</Description>
 		<PackageDescription>Serialization Extensions to MvcCore for using Mongo</PackageDescription>
 		<Version>1.0.9</Version>
-		<PackageId>MongoExtensions</PackageId>
+		<PackageId>BsonExtensions</PackageId>
 		<Authors>alphons</Authors>
 		<AssemblyVersion>8.1.0.9</AssemblyVersion>
 		<FileVersion>8.1.0.9</FileVersion>

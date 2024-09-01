@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Text.Json;
 
-namespace MongoExtensions.Converters;
+namespace BsonExtensions.Converters;
 
 public class DateTimeBsonConverter : JsonConverter<DateTime>
 {

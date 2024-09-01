@@ -1,7 +1,7 @@
 ﻿
 using System.Text;
 
-namespace MongoExtensions.ConsoleApp;
+namespace MongoCli;
 
 public class FunctionArguments
 {
