@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 
 using BsonExtensions.Converters;
+using System.Linq.Expressions;
 
 
 namespace BsonExtensions;
@@ -192,6 +193,17 @@ public static class BsonJsonExtensions
 
 	// Extensions synchronous
 	// ==============================================================================================================
+	public static IFindFluent<T, T>? Where<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
+	{
+		return collection.Find(filter);
+	}
+
+	public static T? FirstOrDefault<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
+	{
+		var results = collection.Find(filter);
+
+		return results.FirstOrDefault();
+	}
 
 	public static BsonDocument RunCommand(this IMongoDatabase db, string JsonDocument, ReadPreference? readPreference = null)
 	{
@@ -276,5 +288,16 @@ public static class BsonJsonExtensions
 		return collection.Watch<BsonDocument>(bsonDocuments, options);
 	}
 
+	// ------------------------------------
+
+	public async static Task<T?> FirsOrDefaultAsync<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
+	{
+		var results = await collection.FindAsync(filter);
+
+		if (results == null)
+			return default;
+		else
+			return await results.FirstOrDefaultAsync();
+	}
 
 }

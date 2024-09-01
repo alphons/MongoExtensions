@@ -1,73 +1,75 @@
 ﻿
+using BsonExtensions;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 
-using BsonExtensions;
 
 using MongoEfCore;
 using System.Diagnostics;
 
 var connectionString = "mongodb://192.168.28.123:27017";
 
-var settings = MongoClientSettings.FromConnectionString($"{connectionString}");
+if (1 == 1)
+{
+	var sw1 = Stopwatch.StartNew();
 
-settings.ServerSelectionTimeout = TimeSpan.FromSeconds(1);
+	var settings = MongoClientSettings.FromConnectionString($"{connectionString}");
 
-var dbClient = new MongoClient(settings);
+	settings.ServerSelectionTimeout = TimeSpan.FromSeconds(1);
 
-var movies = dbClient?.GetDatabase("testdb1").GetCollection("movies");
+	var dbClient = new MongoClient(settings);
 
-var iiii = await movies.FindAsync("{ _id : '66d48adca720951e07550d78' }");
+	var movies = dbClient?.GetDatabase("testdb1").GetCollection<Movie>("movies");
 
-var j = iiii.FirstOrDefault();
+	var aaa1 = movies.FirstOrDefault(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+
+	var aaa2 = await movies.Where(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78")).FirstOrDefaultAsync();
+
+	var aaa3 = await movies.FirsOrDefaultAsync(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+
+	for (int i = 0; i < 1000; i++)
+	{
+		await movies.FirsOrDefaultAsync(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+	}
+
+
+	var movie1 = await movies.FirsOrDefaultAsync(x => x._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+
+
+	Console.WriteLine($"{sw1.ElapsedMilliseconds}mS {movie1.Title}");
+
+	return;
+}
 
 //====================================
 
-
+var sw2 = Stopwatch.StartNew();
 
 
 var client = new MongoClient(connectionString);
 
 var db = MyDbContext.Create(client.GetDatabase("testdb1"));
 
-db.Database.EnsureCreated();
+//db.Database.EnsureCreated();
 
-//for (int i = 0; i < 10000; i++)
+for (int i = 0; i < 1000; i++)
+{
+	await db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+}
+var movie2 = await db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
+
+Console.WriteLine($"{sw2.ElapsedMilliseconds}mS {movie2.Title}");
+
+//if(movie == null)
 //{
-//	var movie1 = new Movie()
+//	movie = new Movie()
 //	{
-//		Title = "Testbeeld " + i,
-//		Rated = i.ToString(),
-//		Plot = "this is movie " + i
+//		Title = "Back to the Future",
+//		Rated = "9",
+//		Plot = "people in the past going to the future"
 //	};
-//	db.Movies.Add(movie1);
-//	var status1 = await db.SaveChangesAsync();
+//	db.Movies.Add(movie);
+//	var status = await db.SaveChangesAsync();
 //}
 
-//return;
-
-await db.Movies.FirstOrDefaultAsync();
-
-//await db.Movies.CountAsync();
-
-var sw = Stopwatch.StartNew();
-
-//var movie = await db.Movies.AsNoTracking().FirstOrDefaultAsync(m => m.Title == "Back to the Future");
-
-var movie = await db.Movies.FirstOrDefaultAsync(m => m._id == MongoDB.Bson.ObjectId.Parse("66d48adca720951e07550d78"));
-
-Console.WriteLine($"{sw.ElapsedMilliseconds}mS");
-
-if(movie == null)
-{
-	movie = new Movie()
-	{
-		Title = "Back to the Future",
-		Rated = "9",
-		Plot = "people in the past going to the future"
-	};
-	db.Movies.Add(movie);
-	var status = await db.SaveChangesAsync();
-}
-
-Console.WriteLine(movie.Plot);
+//Console.WriteLine(movie.Plot);
