@@ -1,114 +1,46 @@
-﻿
-using MongoDB.Driver;
-
+﻿using MongoDB.Driver;
 using MongoDB.Bson;
+using MyExtensions;
 
-using System.Diagnostics;
+var client = new MongoClient("mongodb://192.168.28.123:27017");
 
-using MongoEfCore;
-
-var connectionString = "mongodb://192.168.28.123:27017";
-
-
-var sw1 = Stopwatch.StartNew();
-
-//var settings = MongoClientSettings.FromConnectionString($"{connectionString}");
-
-//settings.ServerSelectionTimeout = TimeSpan.FromSeconds(1);
-
-var dbClient = new MongoClient(connectionString);
-
-if (dbClient == null)
+if (client == null)
 	return;
 
-var movies = dbClient.GetDatabase("testdb3").GetCollection<Movie>("cmovies");
+var klanten = client.GetDatabase("dbCrm").GetCollection<Klant>("KlantenTable");
 
-if (movies == null)
+var indexKeysDefinition = Builders<Klant>.IndexKeys.Ascending(x => x.Name);
+await klanten.Indexes.CreateOneAsync(new CreateIndexModel<Klant>(indexKeysDefinition));
+
+
+if (klanten == null) 
 	return;
 
-//var indexKeysDefinition = Builders<Movie>.IndexKeys.Ascending(x => x.Title);
-//await movies.Indexes.CreateOneAsync(new CreateIndexModel<Movie>(indexKeysDefinition));
-
-
-//for (int i = 0; i < 10000; i++)
+//var klant = new Klant()
 //{
-//	await movies.InsertOneAsync(new Movie()
-//	{
-//		Title = $"This is movie {i}",
-//		Plot = "This plot is unknown",
-//		Rated = "1"
-//	});
-//}
-
-
-//var mmm = new Movie()
-//{
-//	Title = "Unknown",
-//	Plot = "This plot is unknown",
-//	Rated = "1"
+//	Name = "Jochem",
+//	Address = "Huizen",
+//	Age = 35
 //};
 
-//await movies.InsertOneAsync(mmm);
+//await klanten.InsertOneAsync(klant);
 
 
-movies.FirstOrDefault(x => x.Id == ObjectId.Parse("66d5653d643b92e1eb73b087"));
+var wie = klanten.FirstOrDefault(x => x.Name == "Jochem");
 
-sw1.Restart();
+if(wie == null) return;
 
-var aaa1 = movies.FirstOrDefault(x => x.Id == ObjectId.Parse("66d5653d643b92e1eb73b087"));
-
-Console.WriteLine($"{sw1.ElapsedMilliseconds}mS");
-
-sw1.Restart();
-
-var aaa2 = await movies.Where(x => x.Id == ObjectId.Parse("66d5653d643b92e1eb73b087")).FirstOrDefaultAsync();
-
-Console.WriteLine($"{sw1.ElapsedMilliseconds}mS");
-
-sw1.Restart();
-
-var aaa3 = movies.Where(x => x.Id == ObjectId.Parse("66d5653d643b92e1eb73b087")).FirstOrDefault();
-
-Console.WriteLine($"Sync {sw1.ElapsedMilliseconds}mS");
-
-var aaa4 = await movies.FirsOrDefaultAsync(x => x.Id == ObjectId.Parse("66d5653d643b92e1eb73b087"));
-
-Console.WriteLine($"{sw1.ElapsedMilliseconds}mS");
-
-sw1.Restart();
-
-var aaa5 = movies.FirstOrDefault(x => x.Title == "This is movie 5432");
-
-Console.WriteLine($"{sw1.ElapsedMilliseconds}mS");
-
-sw1.Restart();
-
-var a = await movies.CountDocumentsAsync(x => x.Title == "Unknown");
-
-Console.WriteLine($"{sw1.ElapsedMilliseconds}mS");
-
-
-//for (int i = 0; i < 1000; i++)
-//{
-//	await movies.FirsOrDefaultAsync(x => x.Id == ObjectId.Parse("66d5653d643b92e1eb73b087"));
-//}
-
-
-var movie1 = await movies.FirsOrDefaultAsync(x => x.Id == ObjectId.Parse("66d5653d643b92e1eb73b087"));
-
-if(movie1 != null)
-	Console.WriteLine($"{sw1.ElapsedMilliseconds}mS {movie1.Title}");
+Console.WriteLine($"Het {wie.Address}");
 
 
 
-
-class Movie
+class Klant
 {
 	public ObjectId Id { get; set; }
+	public string? Name { get; set; }
 
-	public string? Title { get; set; }
+	public string? Address { get; set; }
 
-	public string? Rated { get; set; }
-
-	public string? Plot { get; set; }
+	public int Age { get; set; }
 }
+
