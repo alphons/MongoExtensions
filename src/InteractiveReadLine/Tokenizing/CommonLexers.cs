@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Text;
-using System.Text.RegularExpressions;
+
 using Lexer = System.Func<InteractiveReadLine.LineState, InteractiveReadLine.Tokenizing.TokenizedLine>;
 using RegexList = System.Collections.Generic.List<InteractiveReadLine.Tokenizing.RegexTokenDef>;
 
@@ -10,7 +8,7 @@ namespace InteractiveReadLine.Tokenizing
 {
     public static class CommonLexers
     {
-        public static RegexList Regex => new RegexList();
+        public static RegexList Regex => new();
 
         /// <summary>
         /// Adds a new token type to the end of the regular expression token list. The token must begin with
@@ -48,7 +46,7 @@ namespace InteractiveReadLine.Tokenizing
         /// <returns></returns>
         public static Lexer ToLexer(this RegexList list)
         {
-            if (!list.Any())
+            if (list.Count == 0)
                 throw new ArgumentException("The RegexTokenDefs list must not be empty");
 
             return lineState =>

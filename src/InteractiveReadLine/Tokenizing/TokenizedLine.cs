@@ -23,7 +23,7 @@ namespace InteractiveReadLine.Tokenizing
 
         public TokenizedLine()
         {
-            _tokens = new List<Token>();
+            _tokens = [];
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace InteractiveReadLine.Tokenizing
         {
             var newToken = new Token(text, isHidden, this, typeCode);
 
-            if (_tokens.Any())
+            if (_tokens.Count != 0)
             {
                 _tokens.Last().Next = newToken;
                 newToken.Previous = _tokens.Last();
@@ -131,24 +131,13 @@ namespace InteractiveReadLine.Tokenizing
         /// independent from a TokenizedLine, this class is hidden from consumers and exposed only through the
         /// IToken interface.  
         /// </remarks>
-        private class Token : IToken
+        private class Token(string text, bool isHidden, TokenizedLine parent, int typeCode) : IToken
         {
-            private readonly TokenizedLine _parent;
-            private string _text;
+			public int TypeCode { get; } = typeCode;
 
-            public Token(string text, bool isHidden, TokenizedLine parent, int typeCode)
+			public string Text
             {
-                _parent = parent;
-                TypeCode = typeCode;
-                _text = text;
-                this.IsHidden = isHidden;
-            }
-
-            public int TypeCode { get; }
-
-            public string Text
-            {
-                get => _text;
+                get => text;
                 set
                 {
                     int? cursorMove = null;
@@ -162,16 +151,16 @@ namespace InteractiveReadLine.Tokenizing
                     {
                         // Check if the cursor is after this token, and if so adjust it accordingly
                         var beforeLen = TextBefore().Length;
-                        if (beforeLen + _text.Length - 1 < _parent.Cursor)
+                        if (beforeLen + text.Length - 1 < parent.Cursor)
                         {
-                            var delta = value.Length - _text.Length;
-                            cursorMove = _parent.Cursor + delta;
+                            var delta = value.Length - text.Length;
+                            cursorMove = parent.Cursor + delta;
                         }
                     }
 
-                    _text = value;
+                    text = value;
                     if (cursorMove != null)
-                        _parent.Cursor = (int) cursorMove;
+                        parent.Cursor = (int) cursorMove;
                 }
             }
 
@@ -180,10 +169,10 @@ namespace InteractiveReadLine.Tokenizing
                 get
                 {
                     int lengthBefore = this.TextBefore().Length;
-                    if (_parent.Cursor < lengthBefore)
+                    if (parent.Cursor < lengthBefore)
                         return null;
 
-                    int offset = _parent.Cursor - lengthBefore;
+                    int offset = parent.Cursor - lengthBefore;
 
                     if (offset == Text.Length && Next?.IsHidden == false)
                     {
@@ -199,7 +188,7 @@ namespace InteractiveReadLine.Tokenizing
                     if (value == null || value < 0 || value > Text.Length)
                         return;
 
-                    _parent.Cursor = this.TextBefore().Length + (int) value;
+                    parent.Cursor = this.TextBefore().Length + (int) value;
                 }
             }
 
@@ -217,15 +206,14 @@ namespace InteractiveReadLine.Tokenizing
 
             public Token FirstNonHidden => this.First.ThisOrNextIfHidden();
 
-            public bool IsHidden { get; set; }
+			public bool IsHidden { get; set; } = isHidden;
 
-            public int? DistanceTo(IToken other, bool ignoreHidden = false)
+			public int? DistanceTo(IToken other, bool ignoreHidden = false)
             {
-                var token = other as Token;
-                if (token == null)
-                    return null;
+				if (other is not Token token)
+					return null;
 
-                var gap = Next?.ForwardTo(token, new List<Token>());
+				var gap = Next?.ForwardTo(token, []);
                 if (ignoreHidden)
                     return gap?.Where(x => !x.IsHidden).Count();
                 else 
@@ -256,7 +244,7 @@ namespace InteractiveReadLine.Tokenizing
                     pointer = pointer.Next;
                 }
 
-                return tokens.ToArray();
+                return [.. tokens];
             }
 
             private string TextBefore()

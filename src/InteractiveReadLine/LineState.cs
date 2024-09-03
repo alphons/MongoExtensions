@@ -7,30 +7,24 @@ namespace InteractiveReadLine
     /// <summary>
     /// Contains the text and cursor position data produced by a user's interaction with the IReadLineProvider.
     /// </summary>
-    public class LineState : IEquatable<LineState>
+    public class LineState(string text, int cursor) : IEquatable<LineState>
     {
         /// <summary>
         /// A string can implicitly be converted to a LineState, however the cursor position will be 0 by default.
         /// </summary>
-        public static implicit operator LineState(string s) => new LineState(s, 0);
-        
-        public LineState(string text, int cursor)
-        {
-            Text = text;
-            Cursor = cursor;
-        }
+        public static implicit operator LineState(string s) => new(s, 0);
 
-        /// <summary>
-        /// Gets the cursor position as an integer offset from the first character
-        /// </summary>
-        public int Cursor { get; }
+		/// <summary>
+		/// Gets the cursor position as an integer offset from the first character
+		/// </summary>
+		public int Cursor { get; } = cursor;
 
-        /// <summary>
-        /// Gets the string contents of the line of text
-        /// </summary>
-        public string Text { get; }
+		/// <summary>
+		/// Gets the string contents of the line of text
+		/// </summary>
+		public string Text { get; } = text;
 
-        public bool Equals(LineState other)
+		public bool Equals(LineState other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;

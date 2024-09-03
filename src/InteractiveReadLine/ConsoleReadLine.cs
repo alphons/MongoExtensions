@@ -14,15 +14,15 @@ namespace InteractiveReadLine
 	/// </summary>
 	public class ConsoleReadLine : IReadLineProvider
 	{
-		private readonly IConsole _console;
-		private FormattedText _lastWrittenText;
-		private int _lastWrittenCursor;
+		private readonly IConsole console;
+		private FormattedText lastWrittenText;
+		private int lastWrittenCursor;
 
-		private int _startingRow;
-		private int _startingCol;
+		private int startingRow;
+		private int startingCol;
 		public ConsoleReadLine(IConsole console = null)
 		{
-			_console = console ?? new SystemConsoleWrapper();
+			this.console = console ?? new SystemConsoleWrapper();
 			this.Start();
 		}
 
@@ -32,7 +32,7 @@ namespace InteractiveReadLine
 		/// <returns></returns>
 		public ConsoleKeyInfo ReadKey()
 		{
-			return _console.ReadKey();
+			return console.ReadKey();
 		}
 
 		/// <summary>
@@ -61,9 +61,9 @@ namespace InteractiveReadLine
 			// First, we should determine what the new line needs to look like. If the new line is 
 			// longer than the old line, we will write the new line exactly.  If it's shorter, we'll 
 			// need to pad it out with empty characters 
-			var writeText = (totalText.Length >= _lastWrittenText.Length)
+			var writeText = (totalText.Length >= lastWrittenText.Length)
 				? totalText
-				: totalText + new string(' ', _lastWrittenText.Length - totalText.Length);
+				: totalText + new string(' ', lastWrittenText.Length - totalText.Length);
 
 			// Sweep through each character in the text to write and determine if an edit needs to be 
 			// made (or does the FormattedChar match what was last written at this position?)
@@ -74,7 +74,7 @@ namespace InteractiveReadLine
 
 			for (int i = 0; i < writeText.Length; i++)
 			{
-				if (i < _lastWrittenText.Length && writeText[i].Equals(_lastWrittenText[i]))
+				if (i < lastWrittenText.Length && writeText[i].Equals(lastWrittenText[i]))
 				{
 					if (edit != null)
 					{
@@ -113,30 +113,30 @@ namespace InteractiveReadLine
 			{
 
 				int left = this.ColOffset(e.Item1);
-				int top = this.RowOffset(e.Item1) + _startingRow;
+				int top = this.RowOffset(e.Item1) + startingRow;
 
-				if (left != _console.CursorLeft)
-					_console.CursorLeft = left;
-				if (top != _console.CursorTop)
-					_console.CursorTop = top;
+				if (left != console.CursorLeft)
+					console.CursorLeft = left;
+				if (top != console.CursorTop)
+					console.CursorTop = top;
 
-				_console.Write(e.Item2);
+				console.Write(e.Item2);
 			}
 
-			_lastWrittenText = totalText;
+			lastWrittenText = totalText;
 
 			// Check if we shifted down the buffer. In certain cases, if we reach the end of the buffer
 			// height and we skip a line, the System.Console shifts everything up, and our starting row
 			// will effectively be less than where we started.  It will never move down.
-			var writtenRowOffset = this.RowOffset(_lastWrittenText.Length);
-			if (writtenRowOffset + _startingRow >= _console.BufferHeight)
+			var writtenRowOffset = this.RowOffset(lastWrittenText.Length);
+			if (writtenRowOffset + startingRow >= console.BufferHeight)
 			{
-				_startingRow = _console.BufferHeight - writtenRowOffset - 1;
+				startingRow = console.BufferHeight - writtenRowOffset - 1;
 			}
 
-			_console.CursorTop = _startingRow + this.RowOffset(cursorPos);
-			_console.CursorLeft = this.ColOffset(cursorPos);
-			_lastWrittenCursor = cursorPos;
+			console.CursorTop = startingRow + this.RowOffset(cursorPos);
+			console.CursorLeft = this.ColOffset(cursorPos);
+			lastWrittenCursor = cursorPos;
 		}
 
 		/// <summary>
@@ -146,15 +146,15 @@ namespace InteractiveReadLine
 		/// <param name="text">The text to write to the console, a newline char will be added automatically</param>
 		public void InsertText(FormattedText text)
 		{
-			var currentText = _lastWrittenText;
-			var currentCursor = _lastWrittenCursor;
+			var currentText = lastWrittenText;
+			var currentCursor = lastWrittenCursor;
 
 			SetText(text, text.Length);
-			_console.WriteLine("");
+			console.WriteLine("");
 
-			_startingRow = _console.CursorTop;
-			_lastWrittenText = "";
-			_lastWrittenCursor = 0;
+			startingRow = console.CursorTop;
+			lastWrittenText = "";
+			lastWrittenCursor = 0;
 			SetText(currentText, currentCursor);
 
 		}
@@ -167,20 +167,20 @@ namespace InteractiveReadLine
 		private void Start()
 		{
 			// _console.WriteLine(string.Empty);
-			_startingRow = _console.CursorTop;
-			_startingCol = 1 + _console.CursorLeft; // AAB
+			startingRow = console.CursorTop;
+			startingCol = 1 + console.CursorLeft; // AAB
 			// _console.CursorLeft = 0;
-			_lastWrittenText = string.Empty;
+			lastWrittenText = string.Empty;
 		}
 
 		private void Finish()
 		{
-			_console.WriteLine(string.Empty);
+			console.WriteLine(string.Empty);
 		}
 
-		private int ColOffset(int length) => _startingCol + length % _console.BufferWidth;
+		private int ColOffset(int length) => startingCol + length % console.BufferWidth;
 
-		private int RowOffset(int length) => (length - this.ColOffset(length)) / _console.BufferWidth;
+		private int RowOffset(int length) => (length - this.ColOffset(length)) / console.BufferWidth;
 
 		/// <summary>
 		/// Provides a convenient static method of calling the ReadLine method on the System.Console

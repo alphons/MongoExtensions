@@ -17,7 +17,7 @@ namespace InteractiveReadLine
     {
         private ReadLineConfig()
         {
-            this.KeyBehaviors = new Dictionary<KeyId, Action<IKeyBehaviorTarget>>();
+            this.KeyBehaviors = [];
         }
 
         /// <summary>
