@@ -65,7 +65,9 @@ class Program
 "command",
 "connect",
 "createindex",
-"countdocuments" ];
+"countdocuments",
+	
+"help"];
 
 
 	private static readonly List<string> history = [];
@@ -294,6 +296,9 @@ class Program
 			switch (parsed.Name.ToLower())
 			{
 				case "":
+					break;
+				case "help":
+					Console.WriteLine(string.Join(',', autoCompleteWords));
 					break;
 				case "color":
 					if (string.IsNullOrWhiteSpace(args))

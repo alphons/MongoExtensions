@@ -7,11 +7,8 @@ public class FunctionArguments
 {
 	public string Name { get; set; }
 	public List<string> Arguments { get; set; }
-
 	public bool IsFunction { get; set; }
-
 	public bool Complete { get; set; }
-
 	public FunctionArguments()
 	{
 		this.Name = string.Empty;
@@ -31,7 +28,6 @@ public static class ParseHelper
 		SquareBracket, // [
 		CurlyBracket // {
 	}
-
 
 	public static FunctionArguments ParseFunction(string s)
 	{
