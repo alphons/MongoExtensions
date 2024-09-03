@@ -154,6 +154,10 @@ class Program
 				if (line == "exit" || line == null)
 					break;
 
+				var comment = line.IndexOf("//");
+				if(comment>=0)
+					line = line[..comment].Trim();
+
 				if (!string.IsNullOrWhiteSpace(line))
 					history.Add(line);
 

@@ -12,7 +12,7 @@ public class FunctionArguments
 	public FunctionArguments()
 	{
 		this.Name = string.Empty;
-		this.Arguments = new();
+		this.Arguments = [];
 	}
 }
 public static class ParseHelper
