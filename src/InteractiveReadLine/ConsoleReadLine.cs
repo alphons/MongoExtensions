@@ -42,9 +42,11 @@ namespace InteractiveReadLine
 		/// <param name="state"></param>
 		public void SetDisplay(LineDisplayState state)
 		{
+			Console.CursorVisible = false; // AAB
 			var totalText = state.Prefix + state.LineBody + state.Suffix;
 			var cursor = state.Prefix.Length + state.Cursor;
 			this.SetText(totalText, cursor);
+			Console.CursorVisible = true; // AAB
 		}
 
 		/// <summary>
