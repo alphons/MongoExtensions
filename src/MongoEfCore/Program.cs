@@ -1,21 +1,18 @@
-﻿using MongoDB.Driver;
-using MongoDB.Bson;
+﻿
+using MongoDB.Driver;
+
 using MyExtensions;
+using MongoEfCore;
 
-//var client = new MongoClient("mongodb://192.168.28.123");
-var client = new MongoClient("mongodb://127.0.0.1");
 
-if (client == null) return;
+var db = new DbContext("Crm");
 
-var klanten = client.GetDatabase("dbCrm").GetCollection<Klant>("KlantenTable");
 
-if (klanten == null) return;
+//var indexKeysDefinition = Builders<Klant>.IndexKeys.Ascending(x => x.Name);
 
-var indexKeysDefinition = Builders<Klant>.IndexKeys.Ascending(x => x.Name);
+//var indexName = await db.KlantTable.Indexes.CreateOneAsync(new CreateIndexModel<Klant>(indexKeysDefinition));
 
-var indexName = await klanten.Indexes.CreateOneAsync(new CreateIndexModel<Klant>(indexKeysDefinition));
-
-var klant = klanten.FirstOrDefault(x => x.Name == "Jochem");
+var klant = db.KlantTable.FirstOrDefault(x => x.Name == "Jochem");
 
 if(klant == null)
 {
@@ -26,18 +23,9 @@ if(klant == null)
 		Age = 35
 	};
 
-	await klanten.InsertOneAsync(klant);
+	await db.KlantTable.InsertOneAsync(klant);
 }
 
 Console.WriteLine($"Het {klant.Address}");
 
-
-
-class Klant
-{
-	public ObjectId Id { get; set; }
-	public string? Name { get; set; }
-	public string? Address { get; set; }
-	public int Age { get; set; }
-}
 
