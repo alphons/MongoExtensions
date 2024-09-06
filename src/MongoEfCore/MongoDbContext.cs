@@ -7,8 +7,9 @@ namespace MongoEfCore
 {
 	public class MongoDbContext(string name)
 	{
-		private readonly IMongoDatabase db = new MongoClient(ConfigurationManager.ConnectionStrings["mongo"].ConnectionString)
-		.GetDatabase(name);
+		private readonly IMongoDatabase db = 
+			new MongoClient(ConfigurationManager.ConnectionStrings["mongo"].ConnectionString)
+			.GetDatabase(name);
 		public IMongoCollection<T> Table<T>() => db.GetCollection<T>($"{typeof(T).Name}Table");
 	}
 }
