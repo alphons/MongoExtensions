@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoTestWeb", "MongoTestWe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoGui", "MongoGui\MongoGui.csproj", "{5F48F122-637F-4471-8D56-E58ACEADFF22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoEfCore", "MongoEfCore\MongoEfCore.csproj", "{B398A402-4D22-47AE-AD79-D5C2224B160B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoExample", "MongoExample\MongoExample.csproj", "{B398A402-4D22-47AE-AD79-D5C2224B160B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
