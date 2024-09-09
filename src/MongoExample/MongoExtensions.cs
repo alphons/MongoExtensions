@@ -3,9 +3,9 @@
 using System.Linq.Expressions;
 
 
-namespace MyExtensions;
+namespace MongoDb.Extensions;
 
-public static class MongoExtensions
+public static class LinqExtensions
 {
 	public static IFindFluent<T, T>? Where<T>(this IMongoCollection<T> collection, Expression<Func<T, bool>> filter)
 	{
@@ -28,4 +28,11 @@ public static class MongoExtensions
 		else
 			return await results.FirstOrDefaultAsync();
 	}
+}
+
+public class MongoDbContext(string name)
+{
+	private readonly IMongoDatabase db = new MongoClient(ConfigurationManager.ConnectionStrings["mongo"].ConnectionString)
+	.GetDatabase(name);
+	public IMongoCollection<T> Table<T>() => db.GetCollection<T>($"{typeof(T).Name}Table");
 }
