@@ -2,10 +2,10 @@
 using MongoDB.Driver;
 
 using MyExtensions;
-using MongoEfCore;
+using MongoExample;
 
 
-var db = new DbContext("Crm");
+var db = new CrmContext();
 
 
 //var indexKeysDefinition = Builders<Klant>.IndexKeys.Ascending(x => x.Name);

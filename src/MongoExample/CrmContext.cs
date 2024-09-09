@@ -2,9 +2,9 @@
 using MongoDB.Driver;
 
 
-namespace MongoEfCore;
+namespace MongoExample;
 
-public class DbContext(string name) : MongoDbContext(name)
+public class CrmContext() : MongoDbContext("Crm")
 {
 	public IMongoCollection<Klant> KlantTable => Table<Klant>();
 	public IMongoCollection<Hypotheek> HypotheekTable => Table<Hypotheek>();
