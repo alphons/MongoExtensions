@@ -23,7 +23,9 @@ if(klant == null)
 		Age = 35
 	};
 
+	var isession = await db.Client.StartSessionAsync();
 	await db.KlantTable.InsertOneAsync(klant);
+	isession.Dispose();
 }
 
 Console.WriteLine($"Het {klant.Address}");
