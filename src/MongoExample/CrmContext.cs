@@ -5,7 +5,7 @@ using MongoDb.Extensions;
 
 namespace MongoExample;
 
-public class CrmContext() : MongoDbContext("Crm")
+public class CrmContext() : MongoDbContext("dbCrm")
 {
 	public IMongoCollection<Klant> KlantTable => Table<Klant>();
 	public IMongoCollection<Hypotheek> HypotheekTable => Table<Hypotheek>();

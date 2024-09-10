@@ -1,5 +1,5 @@
 ﻿using MongoDB.Driver;
-
+using System.Configuration;
 using System.Linq.Expressions;
 
 
@@ -33,6 +33,6 @@ public static class LinqExtensions
 public class MongoDbContext(string name)
 {
 	private readonly IMongoDatabase db = new MongoClient(ConfigurationManager.ConnectionStrings["mongo"].ConnectionString)
-	.GetDatabase(name);
+		.GetDatabase(name);
 	public IMongoCollection<T> Table<T>() => db.GetCollection<T>($"{typeof(T).Name}Table");
 }
