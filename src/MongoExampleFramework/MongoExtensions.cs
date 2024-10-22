@@ -52,7 +52,7 @@ namespace MongoDb.Extensions
 
 		public MongoDbContext(string name)
 		{
-			Client = new MongoClient(ConfigurationManager.ConnectionStrings["mongo"].ConnectionString);
+			Client = new MongoClient(ConfigurationManager.ConnectionStrings[name].ConnectionString);
 
 			db = Client.GetDatabase(name);
 		}

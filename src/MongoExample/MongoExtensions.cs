@@ -49,7 +49,7 @@ public class MongoDbContext
 
 	public MongoDbContext(string name)
 	{
-		Client = new(ConfigurationManager.ConnectionStrings["mongo"].ConnectionString);
+		Client = new(ConfigurationManager.ConnectionStrings[name].ConnectionString);
 
 		db = Client.GetDatabase(name);
 	}

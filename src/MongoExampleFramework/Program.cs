@@ -1,19 +1,17 @@
-﻿using MongoDb.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+
+using MongoDb.Extensions;
 
 namespace MongoExampleFramework
 {
 	internal class Program
 	{
-		static void Main(string[] args)
+		static async Task Main(string[] args)
 		{
 			var db = new CrmContext();
 
-			var klant = db.KlantTable.FirstOrDefault(x => x.Name == "Peter");
+			var klant = await db.KlantTable.FirstOrDefaultAsync(x => x.Name == "Peter");
 
 			if (klant == null)
 			{
