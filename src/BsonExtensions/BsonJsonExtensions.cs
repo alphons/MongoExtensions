@@ -72,6 +72,25 @@ public static class BsonJsonExtensions
 		return await collection.ReplaceOneAsync(filter, doc, new ReplaceOptions() { IsUpsert = true }, cancellationToken);
 	}
 
+	public async static Task<UpdateResult> UpdateOneAsync<T>(this IMongoCollection<T> collection, string Json, T? objA, UpdateOptions? updateOptions = null, CancellationToken cancellationToken = default)
+	{
+		if (objA == null)
+			throw new Exception("update object is null");
+		var doc = BsonJsonSerializer.ToBsonDocument(objA);
+		var id = doc["_id"];
+		string filter;
+		if (id.IsGuid)
+			filter = $"{{ _id : UUID('{id.AsGuid}') }}";
+		else if (id.IsObjectId)
+			filter = $"{{ _id : ObjectId('{id.AsObjectId}') }}";
+		else if (id.IsString)
+			filter = $"{{ _id : '{id.AsString}' }}";
+		else
+			filter = $"{{ _id : {id.AsInt64} }}"; // some kind of int
+
+		return await collection.UpdateOneAsync(filter, BsonJsonSerializer.ToBsonDocument(objA), updateOptions, cancellationToken);
+	}
+
 	public async static Task<DeleteResult> DeleteOneAsync(this IMongoCollection<BsonDocument> collection, string Json, CancellationToken cancellationToken = default)
 	{
 		return await collection.DeleteOneAsync(BsonDocument.Parse(Json), cancellationToken);
